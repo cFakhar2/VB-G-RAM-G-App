@@ -197,7 +197,7 @@ export default function App() {
                 <h2 className="text-sm font-bold uppercase tracking-widest text-zinc-600 dark:text-zinc-500">Sub Categories</h2>
                 <span className="text-[10px] font-mono text-zinc-400 font-bold">{selectedCategory?.subCategories.length} Items</span>
               </div>
-              <div className="flex flex-wrap gap-2">
+              <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
                 {selectedCategory?.subCategories.map((sub) => (
                   <button
                     key={sub.id}
@@ -206,20 +206,29 @@ export default function App() {
                       setSelectedSubCategory(sub);
                       setSearchQuery("");
                     }}
-                    className={`px-4 py-2.5 rounded-full text-xs font-bold border transition-all duration-200 text-left max-w-xs ${
+                    className={`h-full flex items-center p-3 rounded-2xl text-xs font-bold border transition-all duration-300 text-left relative overflow-hidden group ${
                       selectedSubCategory?.id === sub.id
-                        ? 'bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 border-zinc-900 dark:border-zinc-100 shadow-lg scale-[1.02]'
-                        : 'bg-zinc-50 dark:bg-zinc-900 text-zinc-800 dark:text-zinc-300 border-zinc-200 dark:border-zinc-800 hover:border-emerald-500 dark:hover:border-emerald-500'
+                        ? 'bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 border-zinc-900 dark:border-zinc-100 shadow-xl shadow-zinc-500/10 scale-[1.02] z-10'
+                        : 'bg-zinc-50 dark:bg-zinc-900/40 text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-zinc-800 hover:border-emerald-500/50 hover:bg-white dark:hover:bg-zinc-800 hover:text-emerald-700 dark:hover:text-emerald-400'
                     }`}
                   >
-                    <span className="line-clamp-2">{sub.name}</span>
+                    {selectedSubCategory?.id === sub.id && (
+                      <motion.div 
+                        layoutId="sub-active-bg"
+                        className="absolute inset-0 bg-zinc-900 dark:bg-zinc-100 -z-10"
+                      />
+                    )}
+                    <span className="line-clamp-3 leading-relaxed">{sub.name}</span>
+                    <div className={`absolute right-2 bottom-2 transition-transform duration-300 ${selectedSubCategory?.id === sub.id ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'}`}>
+                      <ChevronRight className="w-3 h-3 text-emerald-500" />
+                    </div>
                   </button>
                 ))}
               </div>
             </section>
 
             {/* Works List Area */}
-            <section className="bg-white dark:bg-zinc-900/50 rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden min-h-[500px]">
+            <section className="bg-white dark:bg-zinc-900/50 rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden min-h-[500px] flex flex-col">
               {/* Search Bar */}
               <div className="p-4 border-b border-zinc-200 dark:border-zinc-800 flex flex-col md:flex-row gap-4 items-center bg-zinc-100/50 dark:bg-zinc-900/30">
                 <div className="relative w-full">
@@ -227,38 +236,38 @@ export default function App() {
                   <input
                     type="text"
                     id="works-search"
-                    placeholder={isGlobalSearch ? "Search all categories..." : "Filter current sub-category..."}
+                    placeholder={isGlobalSearch ? "Search across all 318 works..." : `Search in ${selectedSubCategory?.name.substring(0, 20)}...`}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-11 pr-10 py-3 bg-white dark:bg-zinc-800 rounded-2xl border border-zinc-200 dark:border-zinc-700 outline-none focus:ring-2 focus:ring-emerald-500/20 text-sm transition-all shadow-sm text-zinc-900 dark:text-zinc-100 font-medium placeholder:text-zinc-500"
+                    className="w-full pl-11 pr-10 py-3 bg-white dark:bg-zinc-800 rounded-2xl border border-zinc-200 dark:border-zinc-700 outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500/50 text-sm transition-all shadow-sm text-zinc-900 dark:text-zinc-100 font-medium placeholder:text-zinc-500/70"
                   />
                   {searchQuery && (
                     <button 
                       onClick={() => setSearchQuery("")}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-full text-zinc-500"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-full text-zinc-500 transition-colors"
                     >
                       <X className="w-3 h-3" />
                     </button>
                   )}
                 </div>
                 
-                <div className="flex items-center gap-2 whitespace-nowrap bg-zinc-100 dark:bg-zinc-800 p-1 rounded-2xl border border-zinc-200 dark:border-zinc-700 shadow-inner">
+                <div className="flex items-center gap-1 bg-zinc-200/50 dark:bg-zinc-800/50 p-1 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-inner">
                   <button
                     onClick={() => setIsGlobalSearch(false)}
-                    className={`px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all ${
+                    className={`px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all duration-200 ${
                       !isGlobalSearch 
-                        ? 'bg-white dark:bg-zinc-100 text-zinc-900 dark:text-zinc-900 shadow-sm border border-zinc-200 dark:border-transparent' 
-                        : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200'
+                        ? 'bg-white dark:bg-zinc-100 text-zinc-900 dark:text-zinc-900 shadow-md' 
+                        : 'text-zinc-500 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-300'
                     }`}
                   >
                     Local
                   </button>
                   <button
                     onClick={() => setIsGlobalSearch(true)}
-                    className={`px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all ${
+                    className={`px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all duration-200 ${
                       isGlobalSearch 
-                        ? 'bg-emerald-600 text-white shadow-sm' 
-                        : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200'
+                        ? 'bg-emerald-600 text-white shadow-md' 
+                        : 'text-zinc-500 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-300'
                     }`}
                   >
                     Global
@@ -267,34 +276,40 @@ export default function App() {
               </div>
 
               {/* Works List Container */}
-              <div className="p-2 sm:p-4">
+              <div className="p-2 sm:p-6 flex-grow flex flex-col">
                 <AnimatePresence mode="wait">
                   <motion.div
-                    key={isGlobalSearch ? 'global' : selectedSubCategory?.id}
+                    key={isGlobalSearch ? `global-${searchQuery}` : `sub-${selectedSubCategory?.id}-${searchQuery}`}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.2 }}
-                    className="space-y-2"
+                    transition={{ duration: 0.3, ease: "easeOut" }}
+                    className="flex-grow flex flex-col"
                   >
                     {isGlobalSearch && !searchQuery.trim() ? (
-                      <div className="flex flex-col items-center justify-center py-20 text-center">
-                        <div className="w-16 h-16 bg-emerald-50 dark:bg-emerald-950/20 rounded-full flex items-center justify-center mb-4">
-                          <Search className="w-6 h-6 text-emerald-500" />
+                      <div className="flex-grow flex flex-col items-center justify-center py-20 text-center animate-in fade-in zoom-in duration-500">
+                        <div className="w-24 h-24 bg-emerald-50 dark:bg-emerald-950/20 rounded-full flex items-center justify-center mb-6 relative">
+                          <motion.div 
+                            animate={{ scale: [1, 1.1, 1] }} 
+                            transition={{ duration: 4, repeat: Infinity }}
+                            className="absolute inset-0 bg-emerald-500/5 rounded-full"
+                          />
+                          <Search className="w-8 h-8 text-emerald-500" />
                         </div>
-                        <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">Global Search Active</h3>
-                        <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 max-w-xs">
-                          Start typing to search across all {DATA.length} major categories and 29 sub-categories.
+                        <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">Global Search Ready</h3>
+                        <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-2 max-w-sm font-medium leading-relaxed">
+                          Discover all 318 interim works across all categories. <br/>Enter a keyword like <span className="text-emerald-700 dark:text-emerald-500 italic">"Pond"</span>, <span className="text-emerald-700 dark:text-emerald-500 italic">"Canal"</span> or <span className="text-emerald-700 dark:text-emerald-500 italic">"SHG"</span>.
                         </p>
                       </div>
                     ) : filteredWorks.length > 0 ? (
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        {filteredWorks.map((work: any) => (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {filteredWorks.map((work: any, index: number) => (
                           <motion.div
                             key={`${work.id}-${work.catId || 'local'}`}
                             id={`work-item-${work.id}`}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: index * 0.03, duration: 0.4 }}
                             onClick={() => {
                               setActiveWorkDetail({
                                 ...work,
@@ -303,16 +318,16 @@ export default function App() {
                                 catId: work.catId || selectedCategory?.id
                               });
                             }}
-                            className="group p-4 bg-zinc-50/50 dark:bg-zinc-800/30 rounded-2xl border border-zinc-100 dark:border-zinc-800 hover:bg-white dark:hover:bg-zinc-800 hover:shadow-xl hover:shadow-zinc-500/5 transition-all flex items-start justify-between gap-4 cursor-pointer active:scale-[0.98]"
+                            className="group p-5 bg-white dark:bg-zinc-800/20 rounded-2xl border border-zinc-100 dark:border-zinc-800 hover:border-emerald-500/30 hover:shadow-2xl hover:shadow-emerald-500/5 transition-all flex items-start justify-between gap-4 cursor-pointer active:scale-[0.98]"
                           >
                             <div className="flex gap-4">
-                              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-zinc-200 dark:bg-zinc-700 flex items-center justify-center text-[10px] font-mono font-bold text-zinc-500 dark:text-zinc-400 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
+                              <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-xs font-mono font-bold text-zinc-500 dark:text-zinc-500 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300">
                                 {work.id}
                               </div>
                               <div className="min-w-0">
                                 {isGlobalSearch && work.catId && (
-                                  <div className="flex items-center gap-2 mb-1">
-                                    <div className="p-0.5 bg-emerald-100 dark:bg-emerald-900/50 rounded text-emerald-600 dark:text-emerald-400">
+                                  <div className="flex items-center gap-2 mb-1.5">
+                                    <div className="p-0.5 bg-emerald-50 dark:bg-emerald-950/40 rounded text-emerald-600 dark:text-emerald-500">
                                       {getCategoryIcon(work.catId)}
                                     </div>
                                     <span className="text-[9px] font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-500 truncate max-w-[150px]">
@@ -320,52 +335,52 @@ export default function App() {
                                     </span>
                                   </div>
                                 )}
-                                <h4 className="text-sm font-semibold leading-snug text-zinc-800 dark:text-zinc-200 group-hover:text-emerald-800 dark:group-hover:text-emerald-400 transition-colors">
+                                <h4 className="text-sm font-bold leading-relaxed text-zinc-900 dark:text-zinc-100 group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
                                   {work.name}
                                 </h4>
                                 {isGlobalSearch && work.subName && (
-                                  <p className="text-[10px] text-zinc-400 mt-1 line-clamp-1 italic">
+                                  <p className="text-[10px] text-zinc-400 dark:text-zinc-500 mt-1 line-clamp-1 italic font-medium">
                                     {work.subName}
                                   </p>
                                 )}
-                                <div className="mt-2 flex items-center gap-3">
-                                  <span className={`text-[10px] px-2 py-0.5 rounded-md font-bold uppercase tracking-wider ${
+                                <div className="mt-3 flex flex-wrap items-center gap-2">
+                                  <span className={`text-[9px] px-2.5 py-1 rounded-full font-bold uppercase tracking-widest border ${
                                     work.name.toLowerCase().includes('individual') 
-                                      ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' 
+                                      ? 'bg-blue-50 dark:bg-blue-950/20 text-blue-600 dark:text-blue-400 border-blue-100 dark:border-blue-900/30' 
                                       : work.name.toLowerCase().includes('community')
-                                      ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400'
-                                      : 'bg-zinc-200 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-400'
+                                      ? 'bg-indigo-50 dark:bg-indigo-950/20 text-indigo-600 dark:text-indigo-400 border-indigo-100 dark:border-indigo-900/30'
+                                      : 'bg-zinc-50 dark:bg-zinc-900/50 text-zinc-500 dark:text-zinc-500 border-zinc-100 dark:border-zinc-800'
                                   }`}>
-                                    {work.name.toLowerCase().includes('individual') ? 'Individual' : work.name.toLowerCase().includes('community') ? 'Community' : 'Other'}
+                                    {work.name.toLowerCase().includes('individual') ? 'Individual' : work.name.toLowerCase().includes('community') ? 'Community' : 'Common'}
                                   </span>
                                   {work.name.toLowerCase().includes('maintenance') && (
-                                    <span className="text-[10px] px-2 py-0.5 rounded-md bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 font-bold uppercase tracking-wider">
+                                    <span className="text-[9px] px-2.5 py-1 rounded-full bg-amber-50 dark:bg-amber-950/20 text-amber-600 dark:text-amber-500 border border-amber-100 dark:border-amber-900/30 font-bold uppercase tracking-widest">
                                       Maintenance
                                     </span>
                                   )}
                                 </div>
                               </div>
                             </div>
-                            <div className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                            <div className="opacity-0 group-hover:opacity-100 translate-x-1 group-hover:translate-x-0 transition-all duration-300 flex-shrink-0 pt-1">
                               <ArrowRight className="w-4 h-4 text-emerald-500" />
                             </div>
                           </motion.div>
                         ))}
                       </div>
                     ) : (
-                      <div className="flex flex-col items-center justify-center py-20 text-center">
-                        <div className="w-20 h-20 bg-zinc-100 dark:bg-zinc-800 rounded-full flex items-center justify-center mb-4">
-                          <Search className="w-8 h-8 text-zinc-300 dark:text-zinc-600" />
+                      <div className="flex-grow flex flex-col items-center justify-center py-24 text-center">
+                        <div className="w-24 h-24 bg-zinc-50 dark:bg-zinc-900 rounded-3xl flex items-center justify-center mb-6 border border-zinc-100 dark:border-zinc-800 shadow-inner">
+                          <Search className="w-10 h-10 text-zinc-300 dark:text-zinc-700" />
                         </div>
-                        <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">No works found</h3>
-                        <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1 max-w-xs mx-auto">
-                          We couldn't find any results matching "{searchQuery}". Try using simpler keywords.
+                        <h3 className="text-xl font-bold text-zinc-900 dark:text-zinc-100">No works found</h3>
+                        <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-2 max-w-xs mx-auto font-medium leading-relaxed">
+                          We couldn't find any results matching <span className="text-zinc-900 dark:text-zinc-200 font-bold">"{searchQuery}"</span>. <br/>Try checking your spelling or using simplified terms.
                         </p>
                         <button 
                           onClick={() => setSearchQuery("")}
-                          className="mt-6 text-sm font-bold text-emerald-800 hover:text-emerald-700 dark:text-emerald-500 dark:hover:text-emerald-400 transition-colors"
+                          className="mt-8 px-6 py-2.5 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 rounded-full text-xs font-black uppercase tracking-widest hover:bg-emerald-500 hover:text-white transition-all shadow-sm active:scale-95"
                         >
-                          Clear search filter
+                          Clear all filters
                         </button>
                       </div>
                     )}
