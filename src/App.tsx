@@ -100,7 +100,7 @@ export default function App() {
   }, [isDarkMode]);
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'dark bg-zinc-950 text-zinc-100' : 'bg-white text-zinc-900'} font-sans`}>
+    <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'dark bg-zinc-950 text-zinc-100' : 'bg-zinc-50/50 text-zinc-900'} font-sans`}>
       {/* Navigation Header */}
       <nav className="sticky top-0 z-50 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800 bg-white/70 dark:bg-zinc-950/70">
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between font-sans">
@@ -148,8 +148,8 @@ export default function App() {
                     onClick={() => handleCategoryChange(cat)}
                     className={`w-full flex items-center justify-between gap-3 px-3 py-3 rounded-xl text-left transition-all duration-200 border border-transparent ${
                       selectedCategory?.id === cat.id 
-                        ? 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-900 dark:text-emerald-400 font-bold shadow-sm border-emerald-100 dark:border-emerald-900/40'
-                        : 'hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-800 dark:text-zinc-400 font-semibold'
+                        ? 'bg-emerald-100/50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-400 font-bold shadow-sm border-emerald-200/50 dark:border-emerald-900/40'
+                        : 'bg-white dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-400 font-bold shadow-sm border-zinc-100 dark:border-zinc-800'
                     }`}
                   >
                     <div className="flex items-center gap-3">
@@ -209,7 +209,7 @@ export default function App() {
                     className={`h-full flex items-center p-3 rounded-2xl text-xs font-bold border transition-all duration-300 text-left relative overflow-hidden group ${
                       selectedSubCategory?.id === sub.id
                         ? 'bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 border-zinc-900 dark:border-zinc-100 shadow-xl shadow-zinc-500/10 scale-[1.02] z-10'
-                        : 'bg-zinc-50 dark:bg-zinc-900/40 text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-zinc-800 hover:border-emerald-500/50 hover:bg-white dark:hover:bg-zinc-800 hover:text-emerald-700 dark:hover:text-emerald-400'
+                        : 'bg-white dark:bg-zinc-900/60 text-zinc-800 dark:text-zinc-300 border-zinc-200 dark:border-zinc-800 hover:border-emerald-500/50 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-emerald-700 dark:hover:text-emerald-400 shadow-sm'
                     }`}
                   >
                     {selectedSubCategory?.id === sub.id && (
