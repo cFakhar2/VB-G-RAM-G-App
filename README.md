@@ -21,39 +21,6 @@ This explorer tool provides a structured interface to browse all 318 proposed wo
 - **Adaptive UI**: High-contrast Light and Dark modes for better accessibility in different environments.
 - **Mobile Responsive**: Fully optimized for use on smartphones and tablets for field use.
 
-## 🛠️ Technical Stack
-
-- **Framework**: [React 19](https://react.dev/)
-- **Build Tool**: [Vite](https://vitejs.dev/)
-- **Styling**: [Tailwind CSS 4.0](https://tailwindcss.com/)
-- **Animations**: [Framer Motion](https://www.framer.com/motion/)
-- **Icons**: [Lucide React](https://lucide.dev/)
-
-## 📥 Getting Started
-
-### Prerequisites
-
-- [Node.js](https://nodejs.org/) (v18 or higher recommended)
-- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
-
-### Installation
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/cFakhar2/VB-G-RAM-G-App.git
-   cd VB-G-RAM-G-App
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Start the development server:
-   ```bash
-   npm run dev
-   ```
-
 ## ⚖️ Terms of Use & Legal Disclaimer
 
 ### 1. General Disclaimer
