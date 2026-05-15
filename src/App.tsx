@@ -31,6 +31,7 @@ export default function App() {
   const [isGlobalSearch, setIsGlobalSearch] = useState(false);
   const [activeWorkDetail, setActiveWorkDetail] = useState<(Work & { subName?: string; catName?: string; catId?: string }) | null>(null);
   const [showAIOverview, setShowAIOverview] = useState(false);
+  const [showTerms, setShowTerms] = useState(false);
 
   // Initialize with the first category and subcategory
   useEffect(() => {
@@ -119,7 +120,7 @@ export default function App() {
               className="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/50 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition-all active:scale-95"
             >
               <Sparkles className="w-4 h-4" />
-              <span className="text-xs font-bold uppercase tracking-wider hidden sm:inline">AI Overview</span>
+              <span className="text-xs font-bold uppercase tracking-wider hidden sm:inline">Overview</span>
             </button>
             <button
               onClick={toggleDarkMode}
@@ -391,9 +392,17 @@ export default function App() {
             </div>
           </div>
           <div className="mt-12 pt-8 border-t border-zinc-100 dark:border-zinc-900 text-center">
-            <p className="text-[10px] text-zinc-500 dark:text-zinc-400 font-bold uppercase tracking-wider">
-              Design & Developed by Vision Prototype for public awareness
-            </p>
+            <div className="flex flex-col items-center gap-4">
+              <p className="text-[10px] text-zinc-500 dark:text-zinc-400 font-bold uppercase tracking-wider">
+                Design & Developed by Vision Prototype for public awareness
+              </p>
+              <button 
+                onClick={() => setShowTerms(true)}
+                className="text-[10px] text-zinc-400 hover:text-emerald-600 transition-colors font-bold uppercase tracking-[0.2em] cursor-pointer"
+              >
+                Terms of Use
+              </button>
+            </div>
           </div>
         </div>
       </footer>
@@ -535,7 +544,7 @@ export default function App() {
                     <Sparkles className="w-6 h-6" />
                   </div>
                   <div>
-                    <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-100">AI Overview</h2>
+                    <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-100">Overview</h2>
                     <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">VB-G RAM G Act, 2025</p>
                   </div>
                 </div>
@@ -603,9 +612,12 @@ export default function App() {
                       The Act replaces MGNREGA to ensure better planning and accountability at the panchayat level.
                     </p>
                     <div className="flex items-center gap-3">
-                      <div className="text-[10px] font-black uppercase tracking-widest text-zinc-400 px-3 py-1 border border-zinc-200 dark:border-zinc-800 rounded-full">
-                        India Development Review
-                      </div>
+                      <button 
+                        onClick={() => setShowTerms(true)}
+                        className="text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:text-emerald-600 transition-colors px-3 py-1 border border-zinc-200 dark:border-zinc-800 rounded-full cursor-pointer"
+                      >
+                        Terms of Use
+                      </button>
                     </div>
                   </footer>
                 </div>
@@ -618,6 +630,67 @@ export default function App() {
                   className="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl font-bold shadow-lg shadow-emerald-600/20 transition-all active:scale-[0.98]"
                 >
                   Got it, thank you
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+      {/* Terms of Use Modal */}
+      <AnimatePresence>
+        {showTerms && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowTerms(false)}
+              className="fixed inset-0 bg-black/60 backdrop-blur-md z-[120]"
+            />
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="fixed inset-4 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-full md:max-w-xl max-h-[80vh] bg-white dark:bg-zinc-950 z-[121] shadow-2xl rounded-3xl overflow-hidden flex flex-col border border-zinc-200 dark:border-zinc-800"
+            >
+              <div className="p-6 border-b border-zinc-100 dark:border-zinc-900 flex items-center justify-between">
+                <h2 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">Terms of Use</h2>
+                <button 
+                  onClick={() => setShowTerms(false)}
+                  className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-full transition-colors"
+                >
+                  <X className="w-5 h-5 text-zinc-500" />
+                </button>
+              </div>
+              <div className="p-8 overflow-y-auto space-y-6 text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                <section>
+                  <h3 className="font-bold text-zinc-900 dark:text-zinc-100 mb-2">1. Educational Purpose</h3>
+                  <p>This application is provided exclusively for informational and public awareness purposes regarding the interim guidelines of the VB-G RAM G Act, 2025. It is not an official government platform.</p>
+                </section>
+                <section>
+                  <h3 className="font-bold text-zinc-900 dark:text-zinc-100 mb-2">2. Accuracy of Data</h3>
+                  <p>While we strive for precision, the list of permissible works is subject to change by the Ministry of Rural Development. Users are advised to cross-reference with official gazette notifications.</p>
+                </section>
+                <section>
+                  <h3 className="font-bold text-zinc-900 dark:text-zinc-100 mb-2">3. Limitation of Liability</h3>
+                  <p>The developers (Vision Prototype) shall not be held liable for any administrative decisions, financial planning, or field executions based solely on the data presented within this interface.</p>
+                </section>
+                <section>
+                  <h3 className="font-bold text-zinc-900 dark:text-zinc-100 mb-2">4. User Responsibility</h3>
+                  <p>It is the responsibility of the user (e.g., GP secretaries, engineers, citizens) to ensure that any work undertaken complies with current state-specific and national implementation rules.</p>
+                </section>
+                <div className="pt-4 border-t border-zinc-100 dark:border-zinc-900">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 text-center">
+                    Version 1.0.2 (Interim) • May 2026
+                  </p>
+                </div>
+              </div>
+              <div className="p-6 bg-zinc-50 dark:bg-zinc-900/50 border-t border-zinc-100 dark:border-zinc-900">
+                <button 
+                  onClick={() => setShowTerms(false)}
+                  className="w-full py-3 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-xl font-bold transition-all active:scale-[0.98]"
+                >
+                  I Understand
                 </button>
               </div>
             </motion.div>
