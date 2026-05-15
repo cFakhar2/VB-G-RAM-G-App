@@ -40,8 +40,8 @@ This explorer tool provides a structured interface to browse all 318 proposed wo
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/cFakhar2/VB-G-RAM-G.git
-   cd VB-G-RAM-G
+   git clone https://github.com/cFakhar2/VB-G-RAM-G-App.git
+   cd VB-G-RAM-G-App
    ```
 
 2. Install dependencies:
