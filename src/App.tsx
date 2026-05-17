@@ -101,6 +101,34 @@ export default function App() {
     }
   }, [isDarkMode]);
 
+  const getSubCategoryNumber = (subName: string, fallbackIdx: number) => {
+    const match = subName.match(/^(\d+)\)\./);
+    return match ? match[1] : (fallbackIdx + 1).toString();
+  };
+
+  const getSubCategoryLabel = () => {
+    if (!selectedCategory || !selectedSubCategory) return "";
+    const catIdx = DATA.findIndex(c => c.id === selectedCategory.id) + 1;
+    const subIdx = selectedCategory.subCategories.findIndex(s => s.id === selectedSubCategory.id);
+    const subNum = getSubCategoryNumber(selectedSubCategory.name, subIdx);
+    return `${catIdx}.${subNum}`;
+  };
+
+  const getWorkFullCode = (workId: number) => {
+    for (let cIdx = 0; cIdx < DATA.length; cIdx++) {
+      const cat = DATA[cIdx];
+      for (let sIdx = 0; sIdx < cat.subCategories.length; sIdx++) {
+        const sub = cat.subCategories[sIdx];
+        const work = sub.works.find(w => w.id === workId);
+        if (work) {
+          const subNum = getSubCategoryNumber(sub.name, sIdx);
+          return `${cIdx + 1}.${subNum}.${work.id}`;
+        }
+      }
+    }
+    return "";
+  };
+
   return (
     <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'dark bg-zinc-950 text-zinc-100' : 'bg-zinc-50/50 text-zinc-900'} font-sans`}>
       {/* Navigation Header */}
@@ -160,7 +188,7 @@ export default function App() {
             <section id="categories-section">
               <h2 className="text-sm font-bold uppercase tracking-widest text-zinc-600 dark:text-zinc-500 mb-4 px-2">Master Categories</h2>
               <div className="space-y-1">
-                {DATA.map((cat) => (
+                {DATA.map((cat, index) => (
                   <button
                     key={cat.id}
                     id={`cat-btn-${cat.id}`}
@@ -175,7 +203,9 @@ export default function App() {
                       <div className={`p-1.5 rounded-lg transition-colors ${selectedCategory?.id === cat.id ? 'bg-emerald-100 dark:bg-emerald-900/50' : 'bg-zinc-100 dark:bg-zinc-800'}`}>
                         {getCategoryIcon(cat.id)}
                       </div>
-                      <span className="text-sm line-clamp-1">{cat.name.split('-')[1].trim()}</span>
+                      <span className="text-sm line-clamp-1">
+                        {index + 1} : {cat.name.split('-')[1].trim()}
+                      </span>
                     </div>
                     {selectedCategory?.id === cat.id && (
                       <motion.div layoutId="active-indicator">
@@ -293,6 +323,16 @@ export default function App() {
                   </button>
                 </div>
               </div>
+
+              {!isGlobalSearch && selectedSubCategory && (
+                <div className="px-4 pb-3 flex items-center gap-2">
+                  <div className="h-px flex-grow bg-zinc-200 dark:bg-zinc-800" />
+                  <span className="text-[10px] font-black uppercase tracking-widest text-emerald-700 dark:text-emerald-500 bg-emerald-50 dark:bg-emerald-950/30 px-3 py-1 rounded-full border border-emerald-100 dark:border-emerald-900/40 shadow-sm">
+                    Work under sub Category- {getSubCategoryLabel()}
+                  </span>
+                  <div className="h-px flex-grow bg-zinc-200 dark:bg-zinc-800" />
+                </div>
+              )}
 
               {/* Works List Container */}
               <div className="p-2 sm:p-6 flex-grow flex flex-col">
@@ -489,6 +529,7 @@ export default function App() {
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 leading-tight">
+                      <span className="text-emerald-600 dark:text-emerald-500 mr-2">{getWorkFullCode(activeWorkDetail.id)} :</span>
                       {activeWorkDetail.name}
                     </h2>
                     <div className="mt-4 flex flex-wrap gap-2">
