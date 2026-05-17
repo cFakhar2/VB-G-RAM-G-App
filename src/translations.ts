@@ -43,6 +43,13 @@ export const translations = {
     yes: "Yes",
     no: "No",
     faq: "Frequently Asked Questions",
+    feedback: "Feedback",
+    feedbackTitle: "Send Feedback",
+    feedbackLabelName: "Full Name",
+    feedbackLabelEmail: "Email Address",
+    feedbackLabelMessage: "Your Message",
+    feedbackSubmit: "Submit Feedback",
+    feedbackSuccess: "Feedback sent successfully!",
     pibDate: "Posted On: 11 MAY 2026 12:19PM by PIB Delhi"
   },
   as: {
@@ -86,6 +93,13 @@ export const translations = {
     yes: "হয়",
     no: "নহয়",
     faq: "সঘনাই সোধা প্ৰশ্নসমূহ (FAQ)",
+    feedback: "মতামত",
+    feedbackTitle: "মতামত পঠিয়াওক",
+    feedbackLabelName: "সম্পূৰ্ণ নাম",
+    feedbackLabelEmail: "ইমেইল ঠিকনা",
+    feedbackLabelMessage: "আপোনাৰ মতামত",
+    feedbackSubmit: "মতামত জমা কৰক",
+    feedbackSuccess: "মতামত সফলতাৰে প্ৰেৰণ কৰা হৈছে!",
     pibDate: "১১ মে’, ২০২৬ তাৰিখে পিআইবি দিল্লীৰ দ্বাৰা প্ৰকাশিত"
   },
   hi: {
@@ -129,6 +143,13 @@ export const translations = {
     yes: "हाँ",
     no: "नहीं",
     faq: "अक्सर पूछे जाने वाले प्रश्न (FAQ)",
+    feedback: "प्रतिक्रिया",
+    feedbackTitle: "अपनी प्रतिक्रिया भेजें",
+    feedbackLabelName: "पूरा नाम",
+    feedbackLabelEmail: "ईमेल पता",
+    feedbackLabelMessage: "आपकी प्रतिक्रिया",
+    feedbackSubmit: "प्रतिक्रिया भेजें",
+    feedbackSuccess: "प्रतिक्रिया सफलतापूर्वक भेज दी गई है!",
     pibDate: "11 मई 2026 को पीआईबी दिल्ली द्वारा पोस्ट किया गया"
   }
 };

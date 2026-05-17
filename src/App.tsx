@@ -25,7 +25,11 @@ import {
   Upload,
   ExternalLink,
   ChevronDown,
-  HelpCircle
+  HelpCircle,
+  Mail,
+  User,
+  Send,
+  MessageSquare
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { DATA, MasterCategory, SubCategory, Work } from "./data";
@@ -50,11 +54,38 @@ export default function App() {
   const [showResources, setShowResources] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
   const [showFAQ, setShowFAQ] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false);
   const [showLangMenu, setShowLangMenu] = useState(false);
   const [uploadStatus, setUploadStatus] = useState<'idle' | 'uploading' | 'success'>('idle');
   const [lang, setLang] = useState<Language>('en');
 
+  const [feedbackStatus, setFeedbackStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
+  const [feedbackName, setFeedbackName] = useState("");
+  const [feedbackEmail, setFeedbackEmail] = useState("");
+  const [feedbackMessage, setFeedbackMessage] = useState("");
+
   const t = translations[lang];
+
+  const handleFeedbackSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setFeedbackStatus('submitting');
+    
+    // Simulate API call and open mailto
+    setTimeout(() => {
+      const subject = encodeURIComponent(`VB-G RAM G Feedback from ${feedbackName}`);
+      const body = encodeURIComponent(`${feedbackMessage}\n\nFrom: ${feedbackName}\nEmail: ${feedbackEmail}`);
+      window.location.href = `mailto:visprotocol@gmail.com?subject=${subject}&body=${body}`;
+      
+      setFeedbackStatus('success');
+      setTimeout(() => {
+        setShowFeedback(false);
+        setFeedbackStatus('idle');
+        setFeedbackName("");
+        setFeedbackEmail("");
+        setFeedbackMessage("");
+      }, 2000);
+    }, 1000);
+  };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -589,12 +620,22 @@ export default function App() {
                   </p>
                 </div>
               </div>
-              <button 
-                onClick={() => setShowTerms(true)}
-                className="text-[10px] text-zinc-500 hover:text-emerald-600 transition-colors font-bold uppercase tracking-[0.2em] cursor-pointer"
-              >
-                {t.termsOfUse}
-              </button>
+              <div className="flex items-center gap-6">
+                <button 
+                  onClick={() => setShowTerms(true)}
+                  className="text-[10px] text-zinc-500 hover:text-emerald-600 transition-colors font-bold uppercase tracking-[0.2em] cursor-pointer"
+                >
+                  {t.termsOfUse}
+                </button>
+                <div className="w-[1px] h-3 bg-zinc-200 dark:bg-zinc-800 hidden md:block" />
+                <button 
+                  onClick={() => setShowFeedback(true)}
+                  className="text-[10px] text-zinc-500 hover:text-emerald-600 transition-colors font-bold uppercase tracking-[0.2em] cursor-pointer flex items-center gap-2 group"
+                >
+                  <MessageSquare className="w-3 h-3 group-hover:scale-110 transition-transform" />
+                  {t.feedback}
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -1205,6 +1246,124 @@ export default function App() {
                 >
                   {t.close}
                 </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Feedback Modal */}
+      <AnimatePresence>
+        {showFeedback && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => {
+                if (feedbackStatus !== 'submitting') setShowFeedback(false);
+              }}
+              className="fixed inset-0 bg-black/60 backdrop-blur-md z-[140]"
+            />
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              className="fixed inset-4 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-full md:max-w-md bg-white dark:bg-zinc-950 z-[141] shadow-2xl rounded-[2rem] overflow-hidden flex flex-col border border-zinc-200 dark:border-zinc-800"
+            >
+              <div className="p-6 border-b border-zinc-100 dark:border-zinc-900 flex items-center justify-between bg-zinc-50/50 dark:bg-zinc-900/20">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-emerald-100 dark:bg-emerald-900/50 rounded-xl text-emerald-600 dark:text-emerald-400">
+                    <MessageSquare className="w-5 h-5" />
+                  </div>
+                  <h2 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">{t.feedbackTitle}</h2>
+                </div>
+                <button 
+                  onClick={() => setShowFeedback(false)}
+                  className="p-2 hover:bg-zinc-200 dark:hover:bg-zinc-800 rounded-full transition-colors"
+                  disabled={feedbackStatus === 'submitting'}
+                >
+                  <X className="w-5 h-5 text-zinc-500" />
+                </button>
+              </div>
+
+              <div className="p-8">
+                {feedbackStatus === 'success' ? (
+                  <motion.div 
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="py-12 text-center"
+                  >
+                    <div className="w-20 h-20 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
+                      <Sparkles className="w-10 h-10 text-emerald-600 dark:text-emerald-400" />
+                    </div>
+                    <h3 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 mb-2">{t.feedbackSuccess}</h3>
+                    <p className="text-sm text-zinc-500 dark:text-zinc-400">Thank you for helping us improve this platform.</p>
+                  </motion.div>
+                ) : (
+                  <form onSubmit={handleFeedbackSubmit} className="space-y-5">
+                    <div>
+                      <label className="block text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-2 ml-1">{t.feedbackLabelName}</label>
+                      <div className="relative">
+                        <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+                        <input
+                          required
+                          type="text"
+                          value={feedbackName}
+                          onChange={(e) => setFeedbackName(e.target.value)}
+                          className="w-full pl-11 pr-4 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500/50 transition-all font-medium text-sm text-zinc-900 dark:text-zinc-100"
+                          placeholder="John Doe"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-2 ml-1">{t.feedbackLabelEmail}</label>
+                      <div className="relative">
+                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+                        <input
+                          required
+                          type="email"
+                          value={feedbackEmail}
+                          onChange={(e) => setFeedbackEmail(e.target.value)}
+                          className="w-full pl-11 pr-4 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500/50 transition-all font-medium text-sm text-zinc-900 dark:text-zinc-100"
+                          placeholder="john@example.com"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-2 ml-1">{t.feedbackLabelMessage}</label>
+                      <textarea
+                        required
+                        value={feedbackMessage}
+                        onChange={(e) => setFeedbackMessage(e.target.value)}
+                        rows={4}
+                        className="w-full px-5 py-4 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500/50 transition-all font-medium text-sm text-zinc-900 dark:text-zinc-100 resize-none"
+                        placeholder="Tell us what you think..."
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={feedbackStatus === 'submitting'}
+                      className={`w-full py-4 rounded-2xl font-bold flex items-center justify-center gap-3 transition-all shadow-xl shadow-emerald-500/10 active:scale-[0.98] ${
+                        feedbackStatus === 'submitting' 
+                          ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-400 pointer-events-none' 
+                          : 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                      }`}
+                    >
+                      {feedbackStatus === 'submitting' ? (
+                        <div className="w-5 h-5 border-2 border-zinc-400 border-t-transparent rounded-full animate-spin" />
+                      ) : (
+                        <>
+                          <Send className="w-4 h-4" />
+                          <span className="uppercase tracking-widest text-xs">{t.feedbackSubmit}</span>
+                        </>
+                      )}
+                    </button>
+                  </form>
+                )}
               </div>
             </motion.div>
           </>
