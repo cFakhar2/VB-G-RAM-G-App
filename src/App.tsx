@@ -25,6 +25,11 @@ import { DATA, MasterCategory, SubCategory, Work } from "./data";
 import bannerImg from "./assets/images/vb_gram_g_banner_1779003862167.png";
 import logoImg from "./assets/images/vision_prototype_logo_1779004228627.png";
 
+const getSubCategoryNumber = (subName: string, fallbackIdx: number) => {
+  const match = subName.match(/^(\d+)\)\./);
+  return match ? match[1] : (fallbackIdx + 1).toString();
+};
+
 export default function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<MasterCategory | null>(null);
@@ -53,16 +58,23 @@ export default function App() {
   };
 
   const filteredWorks = useMemo(() => {
+    const query = searchQuery.toLowerCase().trim();
+
     if (isGlobalSearch) {
-      if (!searchQuery.trim()) return [];
-      const query = searchQuery.toLowerCase();
-      const results: (Work & { subName: string; catId: string })[] = [];
+      if (!query) return [];
+      const results: (Work & { subName: string; catId: string; fullCode: string })[] = [];
       
-      DATA.forEach(cat => {
-        cat.subCategories.forEach(sub => {
-          sub.works.forEach(work => {
-            if (work.name.toLowerCase().includes(query)) {
-              results.push({ ...work, subName: sub.name, catId: cat.id });
+      DATA.forEach((cat, cIdx) => {
+        cat.subCategories.forEach((sub, sIdx) => {
+          const subNum = getSubCategoryNumber(sub.name, sIdx);
+          sub.works.forEach((work, wIdx) => {
+            const fullCode = `${cIdx + 1}.${subNum}.${work.id}`;
+            if (
+              work.name.toLowerCase().includes(query) || 
+              work.id.toString() === query ||
+              fullCode.includes(query)
+            ) {
+              results.push({ ...work, subName: sub.name, catId: cat.id, fullCode });
             }
           });
         });
@@ -71,13 +83,21 @@ export default function App() {
     }
 
     if (!selectedSubCategory) return [];
-    if (!searchQuery.trim()) return selectedSubCategory.works;
+    if (!query) return selectedSubCategory.works;
     
-    const query = searchQuery.toLowerCase();
-    return selectedSubCategory.works.filter(work => 
-      work.name.toLowerCase().includes(query)
-    );
-  }, [selectedSubCategory, searchQuery, isGlobalSearch]);
+    const catIdx = selectedCategory ? DATA.findIndex(c => c.id === selectedCategory.id) + 1 : 0;
+    const subIdx = selectedCategory ? selectedCategory.subCategories.findIndex(s => s.id === selectedSubCategory.id) : 0;
+    const subNum = getSubCategoryNumber(selectedSubCategory.name, subIdx);
+
+    return selectedSubCategory.works.filter(work => {
+      const fullCode = `${catIdx}.${subNum}.${work.id}`;
+      return (
+        work.name.toLowerCase().includes(query) || 
+        work.id.toString() === query ||
+        fullCode.includes(query)
+      );
+    });
+  }, [selectedSubCategory, selectedCategory, searchQuery, isGlobalSearch]);
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
@@ -100,11 +120,6 @@ export default function App() {
       document.documentElement.classList.remove('dark');
     }
   }, [isDarkMode]);
-
-  const getSubCategoryNumber = (subName: string, fallbackIdx: number) => {
-    const match = subName.match(/^(\d+)\)\./);
-    return match ? match[1] : (fallbackIdx + 1).toString();
-  };
 
   const getSubCategoryLabel = () => {
     if (!selectedCategory || !selectedSubCategory) return "";
@@ -476,11 +491,14 @@ export default function App() {
                   />
                 </div>
                 <div className="text-left">
-                  <p className="text-[10px] text-zinc-600 dark:text-zinc-300 font-black uppercase tracking-widest">
-                    Design & Developed by Vision Prototype
+                  <p className="text-[10px] text-zinc-600 dark:text-zinc-300 font-black uppercase tracking-widest leading-normal">
+                    Designed & Developed by Fakhar Uddin Chowdhury
+                  </p>
+                  <p className="text-[9px] text-zinc-500 dark:text-zinc-400 font-bold italic mb-1">
+                    Junior Engineer, Juria Dev Block, Nagaon, Assam
                   </p>
                   <p className="text-[10px] text-zinc-400 dark:text-zinc-500 font-bold uppercase tracking-wider">
-                    for public awareness
+                    at Vision Prototype for public awareness
                   </p>
                 </div>
               </div>
