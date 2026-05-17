@@ -39,7 +39,9 @@ export const translations = {
     actDocument: "Full Act Document",
     circulars: "Recent Circulars",
     download: "Download",
-    close: "Close"
+    close: "Close",
+    faq: "Frequently Asked Questions",
+    pibDate: "Posted On: 11 MAY 2026 12:19PM by PIB Delhi"
   },
   as: {
     appTitle: "ভিবি-জি ৰাম জী",
@@ -78,7 +80,9 @@ export const translations = {
     actDocument: "সম্পূৰ্ণ আইন নথিপত্ৰ",
     circulars: "শেহতীয়া চৰকাৰী জাননী",
     download: "ডাউনলোড",
-    close: "বন্ধ কৰক"
+    close: "বন্ধ কৰক",
+    faq: "সঘনাই সোধা প্ৰশ্নসমূহ (FAQ)",
+    pibDate: "১১ মে’, ২০২৬ তাৰিখে পিআইবি দিল্লীৰ দ্বাৰা প্ৰকাশিত"
   },
   hi: {
     appTitle: "वीबी-जी राम जी",
@@ -117,6 +121,8 @@ export const translations = {
     actDocument: "संपूर्ण अधिनियम दस्तावेज",
     circulars: "हाल के परिपत्र",
     download: "डाउनलोड",
-    close: "बंद करें"
+    close: "बंद करें",
+    faq: "अक्सर पूछे जाने वाले प्रश्न (FAQ)",
+    pibDate: "11 मई 2026 को पीआईबी दिल्ली द्वारा पोस्ट किया गया"
   }
 };

@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { 
   Search, 
   ChevronRight, 
@@ -24,11 +24,13 @@ import {
   Download,
   Upload,
   ExternalLink,
-  ChevronDown
+  ChevronDown,
+  HelpCircle
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { DATA, MasterCategory, SubCategory, Work } from "./data";
 import { translations, Language } from "./translations";
+import { FAQ_DATA } from "./faqData";
 import bannerImg from "./assets/images/vb_gram_g_banner_1779003862167.png";
 import logoImg from "./assets/images/vision_prototype_logo_1779004228627.png";
 
@@ -47,9 +49,22 @@ export default function App() {
   const [showAIOverview, setShowAIOverview] = useState(false);
   const [showResources, setShowResources] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
+  const [showFAQ, setShowFAQ] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState<'idle' | 'uploading' | 'success'>('idle');
   const [lang, setLang] = useState<Language>('en');
 
   const t = translations[lang];
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setUploadStatus('uploading');
+      // Simulate upload
+      setTimeout(() => {
+        setUploadStatus('success');
+        setTimeout(() => setUploadStatus('idle'), 3000);
+      }, 2000);
+    }
+  };
 
   // Initialize with the first category and subcategory
   useEffect(() => {
@@ -293,6 +308,17 @@ export default function App() {
 
           {/* Main Content Area */}
           <div className="lg:col-span-9 space-y-6">
+            {/* FAQ Link */}
+            <div className="flex justify-end">
+              <button 
+                onClick={() => setShowFAQ(true)}
+                className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl hover:border-emerald-500/50 hover:bg-emerald-50/10 transition-all text-xs font-bold text-zinc-600 dark:text-zinc-400 group active:scale-95 shadow-sm"
+              >
+                <HelpCircle className="w-4 h-4 text-emerald-500 group-hover:animate-pulse" />
+                <span className="uppercase tracking-widest">{t.faq}</span>
+              </button>
+            </div>
+
             {/* Sub Category Selection (Horizontal Scroll or Flex Wrap) */}
             <section id="sub-categories">
               <div className="flex items-baseline justify-between mb-4 px-1">
@@ -670,13 +696,40 @@ export default function App() {
                     <div>
                       <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-4">{t.uploadEstimate}</h3>
                       <div className="relative group/upload">
-                        <input type="file" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
-                        <div className="p-8 border-2 border-dashed border-zinc-200 dark:border-zinc-800 rounded-2xl bg-zinc-50 dark:bg-zinc-900/30 flex flex-col items-center justify-center text-center group-hover/upload:border-emerald-500/50 group-hover/upload:bg-emerald-50/10 transition-all">
-                          <div className="p-3 bg-white dark:bg-zinc-800 rounded-2xl shadow-sm border border-zinc-100 dark:border-zinc-800 mb-4 group-hover/upload:scale-110 transition-transform">
-                            <Upload className="w-6 h-6 text-emerald-500" />
+                        <input 
+                          type="file" 
+                          onChange={handleFileUpload}
+                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" 
+                        />
+                        <div className={`p-8 border-2 border-dashed rounded-2xl flex flex-col items-center justify-center text-center transition-all ${
+                          uploadStatus === 'success' 
+                            ? 'border-emerald-500 bg-emerald-50/30' 
+                            : 'border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/30 group-hover/upload:border-emerald-500/50 group-hover/upload:bg-emerald-50/10'
+                        }`}>
+                          <div className={`p-3 rounded-2xl shadow-sm border transition-all ${
+                            uploadStatus === 'success'
+                              ? 'bg-emerald-500 border-emerald-400 text-white scale-110'
+                              : 'bg-white dark:bg-zinc-800 border-zinc-100 dark:border-zinc-800 text-emerald-500 group-hover/upload:scale-110'
+                          }`}>
+                            {uploadStatus === 'uploading' ? (
+                              <motion.div
+                                animate={{ rotate: 360 }}
+                                transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                              >
+                                <CloudLightning className="w-6 h-6" />
+                              </motion.div>
+                            ) : uploadStatus === 'success' ? (
+                              <ArrowRight className="w-6 h-6 rotate-[-45deg]" />
+                            ) : (
+                              <Upload className="w-6 h-6" />
+                            )}
                           </div>
-                          <p className="text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-1">{t.uploadEstimate}</p>
-                          <p className="text-[10px] font-medium text-zinc-400 dark:text-zinc-500 max-w-[200px] leading-relaxed italic">{t.dropZoneText}</p>
+                          <p className="text-xs font-bold text-zinc-700 dark:text-zinc-300 mt-4 mb-1">
+                            {uploadStatus === 'uploading' ? 'Uploading...' : uploadStatus === 'success' ? 'Uploaded Successfully!' : t.uploadEstimate}
+                          </p>
+                          <p className="text-[10px] font-medium text-zinc-400 dark:text-zinc-500 max-w-[200px] leading-relaxed italic">
+                            {uploadStatus === 'success' ? 'Your estimate is being processed.' : t.dropZoneText}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -851,43 +904,43 @@ export default function App() {
 
               {/* Content */}
               <div className="p-8 overflow-y-auto custom-scrollbar flex-grow">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Category 1: G RAM G Bill */}
-                  <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {/* Category 1: G RAM G Bill & Notifications */}
+                  <div className="space-y-6">
                     <h3 className="text-[10px] font-black uppercase tracking-widest text-zinc-400 flex items-center gap-2">
                        <BookOpen className="w-3 h-3" /> {t.actDocument}
                     </h3>
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                       <a 
                         href="https://prsindia.org/files/bills_acts/bills_parliament/2025/Viksit_Bharat%E2%80%93Guarantee_for_Rozgar_and_Ajeevika_Mission_(Gramin)_VB%E2%80%93G_RAM_G_Bill,2025.pdf"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="block p-5 bg-gradient-to-br from-emerald-600 to-teal-700 rounded-3xl text-white shadow-xl shadow-emerald-500/20 group cursor-pointer active:scale-[0.98] transition-all"
+                        className="block p-6 bg-gradient-to-br from-emerald-600 to-teal-700 rounded-3xl text-white shadow-xl shadow-emerald-500/20 group cursor-pointer active:scale-[0.98] transition-all"
                       >
-                        <p className="text-lg font-bold leading-tight mb-1">VB-G RAM G Bill, 2025</p>
-                        <p className="text-[10px] font-medium text-emerald-100/80 mb-4 uppercase tracking-wider italic">Full Draft Bill • PRS India Document</p>
-                        <div className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest bg-white/20 group-hover:bg-white/30 px-4 py-2 rounded-xl transition-colors">
+                        <p className="text-xl font-bold leading-tight mb-1">VB-G RAM G Bill, 2025</p>
+                        <p className="text-[10px] font-medium text-emerald-100/80 mb-6 uppercase tracking-wider italic">Full Draft Bill • PRS India Official Annexure</p>
+                        <div className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest bg-white/20 group-hover:bg-white/30 px-5 py-2.5 rounded-xl transition-colors">
                           <Download className="w-4 h-4" /> {t.download}
                         </div>
                       </a>
 
                       <a 
-                        href="https://nrega.nic.in/netnrega/WriteReadData/Circulars/Master_Circular_2024.pdf" 
+                        href="https://nrega.nic.in/Circular_Archive/Archive/Master_Circular_2024.pdf" 
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="block p-4 border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 rounded-2xl group hover:border-emerald-500/30 transition-all cursor-pointer shadow-sm"
+                        className="block p-5 border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 rounded-3xl group hover:border-emerald-500/30 transition-all cursor-pointer shadow-sm"
                       >
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className="p-2 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl text-emerald-600">
-                              <FileText className="w-4 h-4" />
+                          <div className="flex items-center gap-4">
+                            <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 rounded-2xl text-emerald-600">
+                              <FileText className="w-5 h-5" />
                             </div>
                             <div>
-                              <p className="text-xs font-bold text-zinc-800 dark:text-zinc-200 group-hover:text-emerald-600 transition-colors">Interim Permissible Works Order</p>
-                              <p className="text-[9px] font-medium text-zinc-400 uppercase tracking-tighter italic">Ministry Notification • NREGA Portal • 2025</p>
+                              <p className="text-sm font-bold text-zinc-800 dark:text-zinc-200 group-hover:text-emerald-600 transition-colors">Interim Permissible Works Order</p>
+                              <p className="text-[9px] font-medium text-zinc-400 uppercase tracking-tighter italic">Ministry Notification • NREGA Portal • 2024-25 Edition</p>
                             </div>
                           </div>
-                          <Download className="w-4 h-4 text-zinc-300 group-hover:text-emerald-500 transition-colors" />
+                          <Download className="w-5 h-5 text-zinc-300 group-hover:text-emerald-500 transition-colors" />
                         </div>
                       </a>
 
@@ -895,70 +948,44 @@ export default function App() {
                         href="https://static.pib.gov.in/WriteReadData/specificdocs/documents/2025/dec/doc20251222741501.pdf"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="block p-4 border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 rounded-2xl group hover:border-emerald-500/30 transition-all cursor-pointer shadow-sm"
+                        className="block p-5 border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 rounded-3xl group hover:border-emerald-500/30 transition-all cursor-pointer shadow-sm"
                       >
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className="p-2 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl text-emerald-600">
-                              <FileText className="w-4 h-4" />
+                          <div className="flex items-center gap-4">
+                            <div className="p-3 bg-blue-50 dark:bg-blue-950/40 rounded-2xl text-blue-600">
+                              <ExternalLink className="w-5 h-5" />
                             </div>
                             <div>
-                              <p className="text-xs font-bold text-zinc-800 dark:text-zinc-200 group-hover:text-emerald-600 transition-colors">Official PIB Document (Dec 2025)</p>
-                              <p className="text-[9px] font-medium text-zinc-400 uppercase tracking-tighter italic">Ministry of Information & Broadcasting</p>
+                              <p className="text-sm font-bold text-zinc-800 dark:text-zinc-200 group-hover:text-blue-600 transition-colors">Official PIB Notification (Dec 2025)</p>
+                              <p className="text-[9px] font-medium text-zinc-400 uppercase tracking-tighter italic">Press Information Bureau • Govt Notification</p>
                             </div>
                           </div>
-                          <Download className="w-4 h-4 text-zinc-300 group-hover:text-emerald-500 transition-colors" />
+                          <Download className="w-5 h-5 text-zinc-300 group-hover:text-blue-500 transition-colors" />
                         </div>
                       </a>
                     </div>
                   </div>
 
-                  {/* Category 2: Government Orders */}
-                  <div className="space-y-4">
-                    <h3 className="text-[10px] font-black uppercase tracking-widest text-zinc-400 flex items-center gap-2">
-                       <FileText className="w-3 h-3" /> {t.governmentOrders}
-                    </h3>
-                    <div className="space-y-3">
-                      {[ 
-                        { name: "MSR-2025-01: Wage Rate Revision", date: "Jan 12, 2025" },
-                        { name: "DRD-2025-44: Asset Geo-mapping", date: "Mar 05, 2025" },
-                        { name: "SEC-2025-09: Interim Work List", date: "Apr 20, 2025" }
-                      ].map((go, i) => (
-                        <div key={i} className="p-4 bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-2xl flex items-center justify-between group hover:border-amber-500/30 transition-all cursor-pointer">
-                          <div className="flex items-center gap-3">
-                            <div className="p-2 bg-amber-50 dark:bg-amber-900/30 rounded-lg text-amber-600">
-                              <ExternalLink className="w-3 h-3" />
-                            </div>
-                            <div>
-                              <p className="text-xs font-bold text-zinc-800 dark:text-zinc-200 group-hover:text-amber-700 transition-colors">{go.name}</p>
-                              <p className="text-[9px] font-medium text-zinc-400 uppercase tracking-tighter">{go.date}</p>
+                  {/* Category 2: Government Orders & Circulars */}
+                  <div className="space-y-6">
+                    <div className="pt-2">
+                      <h3 className="text-[10px] font-black uppercase tracking-widest text-zinc-400 flex items-center gap-2 mb-4">
+                         <CloudLightning className="w-3 h-3" /> {t.circulars}
+                      </h3>
+                      <div className="grid grid-cols-1 gap-3">
+                        {[ 
+                          "Technical Specifications for SHG Livelihood Sheds",
+                          "Climate Resilient Road Standards (Interim 2025)"
+                        ].map((circular, i) => (
+                          <div key={i} className="p-4 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl flex flex-col justify-between hover:shadow-lg transition-all group cursor-pointer">
+                            <p className="text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-3 leading-relaxed group-hover:text-emerald-600">{circular}</p>
+                            <div className="flex items-center justify-between pt-3 border-t border-zinc-100 dark:border-zinc-800">
+                              <span className="text-[9px] font-bold text-zinc-400 uppercase italic">May 15, 2026</span>
+                              <Download className="w-3 h-3 text-zinc-400 group-hover:text-emerald-500" />
                             </div>
                           </div>
-                          <Download className="w-4 h-4 text-zinc-300 group-hover:text-amber-500 transition-colors" />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Category 3: Circulars */}
-                  <div className="md:col-span-2 space-y-4">
-                    <h3 className="text-[10px] font-black uppercase tracking-widest text-zinc-400 flex items-center gap-2">
-                       <CloudLightning className="w-3 h-3" /> {t.circulars}
-                    </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      {[ 
-                        "Guidelines on SHG Livelihood Sheds",
-                        "Rainwater Harvesting Technical Specs",
-                        "Climate Resilient Road Standards"
-                      ].map((circular, i) => (
-                        <div key={i} className="p-4 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl flex flex-col justify-between hover:shadow-lg transition-all group cursor-pointer">
-                          <p className="text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-4 leading-relaxed group-hover:text-emerald-600">{circular}</p>
-                          <div className="flex items-center justify-between pt-3 border-t border-zinc-100 dark:border-zinc-800">
-                            <span className="text-[9px] font-bold text-zinc-400 uppercase">May 2026</span>
-                            <Download className="w-3 h-3 text-zinc-400 group-hover:text-emerald-500" />
-                          </div>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1035,6 +1062,89 @@ export default function App() {
                   className="w-full py-3 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-xl font-bold transition-all active:scale-[0.98]"
                 >
                   I Understand
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+      {/* FAQ Modal */}
+      <AnimatePresence>
+        {showFAQ && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowFAQ(false)}
+              className="fixed inset-0 bg-black/60 backdrop-blur-md z-[130]"
+            />
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed right-0 top-0 h-full w-full max-w-2xl bg-zinc-50 dark:bg-zinc-950 z-[131] shadow-2xl flex flex-col border-l border-zinc-200 dark:border-zinc-800"
+            >
+              {/* Header */}
+              <div className="p-8 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between bg-white dark:bg-zinc-950">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-emerald-100 dark:bg-emerald-900/40 rounded-2xl text-emerald-600 dark:text-emerald-400 shadow-sm">
+                    <HelpCircle className="w-8 h-8" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-black text-zinc-900 dark:text-zinc-100 tracking-tight">{t.faq}</h2>
+                    <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-[0.2em]">{t.pibDate}</p>
+                  </div>
+                </div>
+                <button 
+                  onClick={() => setShowFAQ(false)}
+                  className="p-3 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full transition-colors group"
+                >
+                  <X className="w-6 h-6 text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-zinc-100" />
+                </button>
+              </div>
+
+              {/* Content */}
+              <div className="p-0 overflow-y-auto flex-grow custom-scrollbar">
+                <div className="p-8 space-y-6">
+                  {FAQ_DATA.map((item, idx) => (
+                    <motion.div 
+                      key={idx}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: idx * 0.02 }}
+                      className="group bg-white dark:bg-zinc-900/50 p-6 rounded-3xl border border-zinc-200 dark:border-zinc-800 shadow-sm hover:border-emerald-500/30 transition-all"
+                    >
+                      <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-100 mb-3 flex gap-3">
+                        <span className="text-emerald-500 font-mono">Q.</span>
+                        {item.question}
+                      </h3>
+                      <div className="flex gap-3">
+                        <span className="text-amber-500 font-mono text-sm leading-relaxed">A.</span>
+                        <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed font-medium">
+                          {item.answer}
+                        </p>
+                      </div>
+                    </motion.div>
+                  ))}
+                  
+                  <div className="pt-8 border-t border-zinc-200 dark:border-zinc-800">
+                    <div className="p-6 bg-zinc-100 dark:bg-zinc-900 rounded-2xl text-center">
+                      <p className="text-xs text-zinc-500 font-bold uppercase tracking-widest mb-2">Reference</p>
+                      <p className="text-sm font-bold text-zinc-800 dark:text-zinc-200">Ministry of Rural Development</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action */}
+              <div className="p-8 bg-white dark:bg-zinc-950 border-t border-zinc-200 dark:border-zinc-800">
+                <button 
+                  onClick={() => setShowFAQ(false)}
+                  className="w-full py-4 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-2xl font-bold text-sm uppercase tracking-widest shadow-xl shadow-zinc-500/10 active:scale-[0.98] transition-all"
+                >
+                  {t.close}
                 </button>
               </div>
             </motion.div>
