@@ -684,17 +684,45 @@ export default function App() {
                   <div className="pt-6 border-t border-zinc-100 dark:border-zinc-900">
                     <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-4">{t.targetAudience}</h3>
                     <div className="flex gap-4">
-                      <div className="flex-1 p-4 rounded-2xl border border-dashed border-zinc-200 dark:border-zinc-800 text-center">
-                        <span className="block text-lg font-bold">
-                          {activeWorkDetail.name.toLowerCase().includes('individual') ? "Yes" : "No"}
+                      <div className={`flex-1 p-4 rounded-2xl border border-dashed text-center transition-all ${
+                        activeWorkDetail.name.toLowerCase().includes('individual') 
+                          ? 'border-emerald-500/50 bg-emerald-50/30' 
+                          : 'border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/10'
+                      }`}>
+                        <span className={`block text-xl font-black mb-1 ${
+                          activeWorkDetail.name.toLowerCase().includes('individual') 
+                            ? "text-emerald-600 dark:text-emerald-400" 
+                            : "text-zinc-400 dark:text-zinc-600 opacity-40"
+                        }`}>
+                          {activeWorkDetail.name.toLowerCase().includes('individual') ? t.yes : t.no}
                         </span>
-                        <span className="text-[10px] font-bold text-zinc-400 uppercase">{t.individual}</span>
+                        <span className={`text-[10px] font-black uppercase tracking-widest ${
+                          activeWorkDetail.name.toLowerCase().includes('individual') 
+                            ? "text-emerald-800/70 dark:text-emerald-300/60" 
+                            : "text-zinc-400 dark:text-zinc-500"
+                        }`}>
+                          {t.individual}
+                        </span>
                       </div>
-                      <div className="flex-1 p-4 rounded-2xl border border-dashed border-zinc-200 dark:border-zinc-800 text-center">
-                        <span className="block text-lg font-bold">
-                          {activeWorkDetail.name.toLowerCase().includes('community') ? "Yes" : "No"}
+                      <div className={`flex-1 p-4 rounded-2xl border border-dashed text-center transition-all ${
+                        activeWorkDetail.name.toLowerCase().includes('community') 
+                          ? 'border-emerald-500/50 bg-emerald-50/30' 
+                          : 'border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/10'
+                      }`}>
+                        <span className={`block text-xl font-black mb-1 ${
+                          activeWorkDetail.name.toLowerCase().includes('community') 
+                            ? "text-emerald-600 dark:text-emerald-400" 
+                            : "text-zinc-400 dark:text-zinc-600 opacity-40"
+                        }`}>
+                          {activeWorkDetail.name.toLowerCase().includes('community') ? t.yes : t.no}
                         </span>
-                        <span className="text-[10px] font-bold text-zinc-400 uppercase">{t.community}</span>
+                        <span className={`text-[10px] font-black uppercase tracking-widest ${
+                          activeWorkDetail.name.toLowerCase().includes('community') 
+                            ? "text-emerald-800/70 dark:text-emerald-300/60" 
+                            : "text-zinc-400 dark:text-zinc-500"
+                        }`}>
+                          {t.community}
+                        </span>
                       </div>
                     </div>
                   </div>

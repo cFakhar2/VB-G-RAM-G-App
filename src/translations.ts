@@ -40,6 +40,8 @@ export const translations = {
     circulars: "Recent Circulars",
     download: "Download",
     close: "Close",
+    yes: "Yes",
+    no: "No",
     faq: "Frequently Asked Questions",
     pibDate: "Posted On: 11 MAY 2026 12:19PM by PIB Delhi"
   },
@@ -81,6 +83,8 @@ export const translations = {
     circulars: "শেহতীয়া চৰকাৰী জাননী",
     download: "ডাউনলোড",
     close: "বন্ধ কৰক",
+    yes: "হয়",
+    no: "নহয়",
     faq: "সঘনাই সোধা প্ৰশ্নসমূহ (FAQ)",
     pibDate: "১১ মে’, ২০২৬ তাৰিখে পিআইবি দিল্লীৰ দ্বাৰা প্ৰকাশিত"
   },
@@ -122,6 +126,8 @@ export const translations = {
     circulars: "हाल के परिपत्र",
     download: "डाउनलोड",
     close: "बंद करें",
+    yes: "हाँ",
+    no: "नहीं",
     faq: "अक्सर पूछे जाने वाले प्रश्न (FAQ)",
     pibDate: "11 मई 2026 को पीआईबी दिल्ली द्वारा पोस्ट किया गया"
   }
