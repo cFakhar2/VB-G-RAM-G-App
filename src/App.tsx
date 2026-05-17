@@ -176,25 +176,25 @@ export default function App() {
       {/* Navigation Header */}
       <nav className="sticky top-0 z-50 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800 bg-white/70 dark:bg-zinc-950/70">
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between font-sans">
-          <div className="flex items-center gap-3">
-            <div className="bg-emerald-600 p-2 rounded-xl text-white shadow-lg shadow-emerald-600/20">
-              <BookOpen className="w-6 h-6" />
+          <div className="flex items-center gap-1.5 sm:gap-3 min-w-0">
+            <div className="bg-emerald-600 p-1 sm:p-2 rounded-lg sm:rounded-xl text-white shadow-lg shadow-emerald-600/20 shrink-0">
+              <BookOpen className="w-4 h-4 sm:w-6 h-6" />
             </div>
-            <div>
-              <h1 className="font-bold text-lg leading-tight tracking-tight text-zinc-900 dark:text-zinc-100">{t.appTitle}</h1>
-              <p className="text-[10px] uppercase font-bold tracking-widest text-zinc-600 dark:text-zinc-500">{t.appSubtitle}</p>
+            <div className="min-w-0">
+              <h1 className="font-bold text-xs sm:text-lg leading-tight tracking-tight text-zinc-900 dark:text-zinc-100 truncate sm:whitespace-normal uppercase">{t.appTitle}</h1>
+              <p className="text-[7px] sm:text-[10px] uppercase font-black tracking-widest text-zinc-600 dark:text-zinc-500 truncate">{t.appSubtitle}</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
             <div className="relative group">
               <button 
                 onClick={() => setShowLangMenu(!showLangMenu)}
-                className="flex items-center gap-2 px-3 py-2 rounded-xl bg-zinc-100 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-800 hover:border-emerald-500/50 transition-all cursor-pointer active:scale-95"
+                className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg sm:rounded-xl bg-zinc-100 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-800 hover:border-emerald-500/50 transition-all cursor-pointer active:scale-95"
               >
-                <Languages className="w-4 h-4" />
-                <span className="text-[10px] font-black uppercase tracking-widest">{lang}</span>
-                <ChevronDown className={`w-3 h-3 text-zinc-400 transition-transform ${showLangMenu ? 'rotate-180 text-emerald-500' : ''}`} />
+                <Languages className="w-3.5 h-3.5 sm:w-4 h-4" />
+                <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest">{lang}</span>
+                <ChevronDown className={`w-2.5 h-2.5 sm:w-3 h-3 text-zinc-400 transition-transform ${showLangMenu ? 'rotate-180 text-emerald-500' : ''}`} />
               </button>
               
               <AnimatePresence>
@@ -230,26 +230,26 @@ export default function App() {
 
             <button
               onClick={() => setShowResources(true)}
-              className="flex items-center gap-2 px-3 py-2 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-400 border border-amber-100 dark:border-amber-900/50 hover:bg-amber-100 dark:hover:bg-amber-900/50 transition-all active:scale-95 shadow-sm"
+              className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg sm:rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-400 border border-amber-100 dark:border-amber-900/50 hover:bg-amber-100 dark:hover:bg-amber-900/50 transition-all active:scale-95 shadow-sm"
             >
-              <FileText className="w-4 h-4" />
+              <FileText className="w-3.5 h-3.5 sm:w-4 h-4" />
               <span className="text-xs font-bold uppercase tracking-wider hidden lg:inline">{t.resources}</span>
             </button>
 
             <button
               onClick={() => setShowAIOverview(true)}
-              className="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/50 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition-all active:scale-95 shadow-sm"
+              className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg sm:rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/50 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition-all active:scale-95 shadow-sm"
             >
-              <Sparkles className="w-4 h-4" />
+              <Sparkles className="w-3.5 h-3.5 sm:w-4 h-4" />
               <span className="text-xs font-bold uppercase tracking-wider hidden sm:inline">{t.overview}</span>
             </button>
             <button
               onClick={toggleDarkMode}
               id="theme-toggle"
-              className="p-2.5 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors border border-transparent active:border-zinc-200 dark:active:border-zinc-800"
+              className="p-1.5 sm:p-2.5 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors border border-transparent active:border-zinc-200 dark:active:border-zinc-800"
               aria-label="Toggle Theme"
             >
-              {isDarkMode ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5 text-zinc-900" />}
+              {isDarkMode ? <Sun className="w-4 h-4 sm:w-5 h-5 text-amber-400" /> : <Moon className="w-4 h-4 sm:w-5 h-5 text-zinc-900" />}
             </button>
           </div>
         </div>
