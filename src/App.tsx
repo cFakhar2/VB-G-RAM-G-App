@@ -50,6 +50,7 @@ export default function App() {
   const [showResources, setShowResources] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
   const [showFAQ, setShowFAQ] = useState(false);
+  const [showLangMenu, setShowLangMenu] = useState(false);
   const [uploadStatus, setUploadStatus] = useState<'idle' | 'uploading' | 'success'>('idle');
   const [lang, setLang] = useState<Language>('en');
 
@@ -186,23 +187,45 @@ export default function App() {
           </div>
 
           <div className="flex items-center gap-2">
-            <div className="relative group hidden md:block">
-              <button className="flex items-center gap-2 px-3 py-2 rounded-xl bg-zinc-100 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-800 hover:border-emerald-500/50 transition-all cursor-pointer">
+            <div className="relative group">
+              <button 
+                onClick={() => setShowLangMenu(!showLangMenu)}
+                className="flex items-center gap-2 px-3 py-2 rounded-xl bg-zinc-100 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-800 hover:border-emerald-500/50 transition-all cursor-pointer active:scale-95"
+              >
                 <Languages className="w-4 h-4" />
                 <span className="text-[10px] font-black uppercase tracking-widest">{lang}</span>
-                <ChevronDown className="w-3 h-3 text-zinc-400 group-hover:text-emerald-500 transition-colors" />
+                <ChevronDown className={`w-3 h-3 text-zinc-400 transition-transform ${showLangMenu ? 'rotate-180 text-emerald-500' : ''}`} />
               </button>
-              <div className="absolute right-0 top-full mt-2 w-32 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-xl py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
-                {(['en', 'as', 'hi'] as const).map(l => (
-                  <button 
-                    key={l}
-                    onClick={() => setLang(l)}
-                    className={`w-full text-left px-4 py-2 text-[10px] font-bold uppercase tracking-wider hover:bg-emerald-50 dark:hover:bg-emerald-950/40 hover:text-emerald-700 transition-colors ${lang === l ? 'text-emerald-600 bg-emerald-50/50 dark:bg-emerald-900/20' : 'text-zinc-600 dark:text-zinc-400'}`}
-                  >
-                    {l === 'en' ? 'English' : l === 'as' ? 'অসমীয়া' : 'हिन्दी'}
-                  </button>
-                ))}
-              </div>
+              
+              <AnimatePresence>
+                {showLangMenu && (
+                  <>
+                    <div 
+                      className="fixed inset-0 z-10" 
+                      onClick={() => setShowLangMenu(false)} 
+                    />
+                    <motion.div 
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      className="absolute right-0 top-full mt-2 w-32 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-xl py-2 z-20"
+                    >
+                      {(['en', 'as', 'hi'] as const).map(l => (
+                        <button 
+                          key={l}
+                          onClick={() => {
+                            setLang(l);
+                            setShowLangMenu(false);
+                          }}
+                          className={`w-full text-left px-4 py-2 text-[10px] font-bold uppercase tracking-wider hover:bg-emerald-50 dark:hover:bg-emerald-950/40 hover:text-emerald-700 transition-colors ${lang === l ? 'text-emerald-600 bg-emerald-50/50 dark:bg-emerald-900/20' : 'text-zinc-600 dark:text-zinc-400'}`}
+                        >
+                          {l === 'en' ? 'English' : l === 'as' ? 'অসমীয়া' : 'हिन्दी'}
+                        </button>
+                      ))}
+                    </motion.div>
+                  </>
+                )}
+              </AnimatePresence>
             </div>
 
             <button
@@ -924,25 +947,24 @@ export default function App() {
                         </div>
                       </a>
 
-                      <a 
-                        href="https://nrega.nic.in/Circular_Archive/Archive/Master_Circular_2024.pdf" 
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="block p-5 border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 rounded-3xl group hover:border-emerald-500/30 transition-all cursor-pointer shadow-sm"
+                      <div 
+                        className="block p-5 border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 rounded-3xl group transition-all shadow-sm opacity-80"
                       >
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-4">
-                            <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 rounded-2xl text-emerald-600">
+                            <div className="p-3 bg-zinc-50 dark:bg-zinc-950/40 rounded-2xl text-zinc-400">
                               <FileText className="w-5 h-5" />
                             </div>
                             <div>
-                              <p className="text-sm font-bold text-zinc-800 dark:text-zinc-200 group-hover:text-emerald-600 transition-colors">Interim Permissible Works Order</p>
-                              <p className="text-[9px] font-medium text-zinc-400 uppercase tracking-tighter italic">Ministry Notification • NREGA Portal • 2024-25 Edition</p>
+                              <p className="text-sm font-bold text-zinc-800 dark:text-zinc-200 uppercase">Interim Permissible Works Order</p>
+                              <p className="text-[9px] font-medium text-zinc-400 uppercase tracking-tighter italic">Ministry Notification • May 13, 2026 • NREGA Portal</p>
                             </div>
                           </div>
-                          <Download className="w-5 h-5 text-zinc-300 group-hover:text-emerald-500 transition-colors" />
+                          <div className="px-3 py-1 bg-zinc-100 dark:bg-zinc-800 rounded-lg text-[8px] font-black uppercase text-zinc-400 tracking-widest">
+                            Official Archive Link Pending
+                          </div>
                         </div>
-                      </a>
+                      </div>
 
                       <a 
                         href="https://static.pib.gov.in/WriteReadData/specificdocs/documents/2025/dec/doc20251222741501.pdf"
@@ -1132,7 +1154,16 @@ export default function App() {
                   <div className="pt-8 border-t border-zinc-200 dark:border-zinc-800">
                     <div className="p-6 bg-zinc-100 dark:bg-zinc-900 rounded-2xl text-center">
                       <p className="text-xs text-zinc-500 font-bold uppercase tracking-widest mb-2">Reference</p>
-                      <p className="text-sm font-bold text-zinc-800 dark:text-zinc-200">Ministry of Rural Development</p>
+                      <p className="text-sm font-bold text-zinc-800 dark:text-zinc-200">Ministry of Rural Development, PIB Research</p>
+                      <a 
+                        href="https://static.pib.gov.in/WriteReadData/specificdocs/documents/2026/may/doc2026511867701.pdf"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-[10px] font-bold text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 mt-3 hover:underline transition-all group/link"
+                      >
+                        <Download className="w-3 h-3 group-hover/link:scale-110 transition-transform" />
+                        <span>DOWNLOAD OFFICIAL FAQ PDF (MAY 11, 2026)</span>
+                      </a>
                     </div>
                   </div>
                 </div>
