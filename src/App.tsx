@@ -1312,7 +1312,7 @@ export default function App() {
                           value={feedbackName}
                           onChange={(e) => setFeedbackName(e.target.value)}
                           className="w-full pl-11 pr-4 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500/50 transition-all font-medium text-sm text-zinc-900 dark:text-zinc-100"
-                          placeholder="John Doe"
+                          placeholder="Enter Your Name"
                         />
                       </div>
                     </div>
@@ -1327,7 +1327,7 @@ export default function App() {
                           value={feedbackEmail}
                           onChange={(e) => setFeedbackEmail(e.target.value)}
                           className="w-full pl-11 pr-4 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500/50 transition-all font-medium text-sm text-zinc-900 dark:text-zinc-100"
-                          placeholder="john@example.com"
+                          placeholder="your_mail@example.com"
                         />
                       </div>
                     </div>
