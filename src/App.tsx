@@ -22,6 +22,8 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { DATA, MasterCategory, SubCategory, Work } from "./data";
+import bannerImg from "./assets/images/vb_gram_g_banner_1779003862167.png";
+import logoImg from "./assets/images/vision_prototype_logo_1779004228627.png";
 
 export default function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -135,6 +137,23 @@ export default function App() {
       </nav>
 
       <main className="max-w-7xl mx-auto px-4 py-8">
+        {/* Banner Section */}
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8 flex justify-center"
+        >
+          <div className="w-full max-w-4xl overflow-hidden rounded-[2.5rem] shadow-2xl shadow-orange-500/10 border-4 border-white dark:border-zinc-900 bg-gradient-to-r from-orange-500 to-red-600 aspect-[21/9] flex items-center justify-center">
+            <img 
+              src={bannerImg} 
+              alt="Viksit Bharat G RAM G Bill 2025 Banner"
+              className="w-full h-auto object-cover"
+              referrerPolicy="no-referrer"
+              onLoad={(e) => (e.currentTarget.parentElement!.style.aspectRatio = "auto")}
+            />
+          </div>
+        </motion.div>
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Sidebar: Categories */}
           <div className="lg:col-span-3 space-y-6">
@@ -406,14 +425,28 @@ export default function App() {
               </div>
             </div>
           </div>
-          <div className="mt-12 pt-8 border-t border-zinc-100 dark:border-zinc-900 text-center">
-            <div className="flex flex-col items-center gap-4">
-              <p className="text-[10px] text-zinc-500 dark:text-zinc-400 font-bold uppercase tracking-wider">
-                Design & Developed by Vision Prototype for public awareness
-              </p>
+          <div className="mt-12 pt-8 border-t border-zinc-100 dark:border-zinc-900">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="flex items-center gap-4">
+                <div className="h-12 w-auto overflow-hidden rounded-lg brightness-110 contrast-125">
+                  <img 
+                    src={logoImg} 
+                    alt="Vision Prototype Logo" 
+                    className="h-full w-auto object-contain" 
+                  />
+                </div>
+                <div className="text-left">
+                  <p className="text-[10px] text-zinc-600 dark:text-zinc-300 font-black uppercase tracking-widest">
+                    Design & Developed by Vision Prototype
+                  </p>
+                  <p className="text-[10px] text-zinc-400 dark:text-zinc-500 font-bold uppercase tracking-wider">
+                    for public awareness
+                  </p>
+                </div>
+              </div>
               <button 
                 onClick={() => setShowTerms(true)}
-                className="text-[10px] text-zinc-400 hover:text-emerald-600 transition-colors font-bold uppercase tracking-[0.2em] cursor-pointer"
+                className="text-[10px] text-zinc-500 hover:text-emerald-600 transition-colors font-bold uppercase tracking-[0.2em] cursor-pointer"
               >
                 Terms of Use
               </button>
