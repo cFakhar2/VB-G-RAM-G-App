@@ -18,10 +18,17 @@ import {
   Filter,
   X,
   ArrowRight,
-  Sparkles
+  Sparkles,
+  Languages,
+  FileText,
+  Download,
+  Upload,
+  ExternalLink,
+  ChevronDown
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { DATA, MasterCategory, SubCategory, Work } from "./data";
+import { translations, Language } from "./translations";
 import bannerImg from "./assets/images/vb_gram_g_banner_1779003862167.png";
 import logoImg from "./assets/images/vision_prototype_logo_1779004228627.png";
 
@@ -38,7 +45,11 @@ export default function App() {
   const [isGlobalSearch, setIsGlobalSearch] = useState(false);
   const [activeWorkDetail, setActiveWorkDetail] = useState<(Work & { subName?: string; catName?: string; catId?: string }) | null>(null);
   const [showAIOverview, setShowAIOverview] = useState(false);
+  const [showResources, setShowResources] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
+  const [lang, setLang] = useState<Language>('en');
+
+  const t = translations[lang];
 
   // Initialize with the first category and subcategory
   useEffect(() => {
@@ -154,18 +165,45 @@ export default function App() {
               <BookOpen className="w-6 h-6" />
             </div>
             <div>
-              <h1 className="font-bold text-lg leading-tight tracking-tight text-zinc-900 dark:text-zinc-100">VB-G RAM G</h1>
-              <p className="text-[10px] uppercase font-bold tracking-widest text-zinc-600 dark:text-zinc-500">Permissible Works 2025 (Interim)</p>
+              <h1 className="font-bold text-lg leading-tight tracking-tight text-zinc-900 dark:text-zinc-100">{t.appTitle}</h1>
+              <p className="text-[10px] uppercase font-bold tracking-widest text-zinc-600 dark:text-zinc-500">{t.appSubtitle}</p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
+            <div className="relative group hidden md:block">
+              <button className="flex items-center gap-2 px-3 py-2 rounded-xl bg-zinc-100 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-800 hover:border-emerald-500/50 transition-all cursor-pointer">
+                <Languages className="w-4 h-4" />
+                <span className="text-[10px] font-black uppercase tracking-widest">{lang}</span>
+                <ChevronDown className="w-3 h-3 text-zinc-400 group-hover:text-emerald-500 transition-colors" />
+              </button>
+              <div className="absolute right-0 top-full mt-2 w-32 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-xl py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                {(['en', 'as', 'hi'] as const).map(l => (
+                  <button 
+                    key={l}
+                    onClick={() => setLang(l)}
+                    className={`w-full text-left px-4 py-2 text-[10px] font-bold uppercase tracking-wider hover:bg-emerald-50 dark:hover:bg-emerald-950/40 hover:text-emerald-700 transition-colors ${lang === l ? 'text-emerald-600 bg-emerald-50/50 dark:bg-emerald-900/20' : 'text-zinc-600 dark:text-zinc-400'}`}
+                  >
+                    {l === 'en' ? 'English' : l === 'as' ? 'অসমীয়া' : 'हिन्दी'}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <button
+              onClick={() => setShowResources(true)}
+              className="flex items-center gap-2 px-3 py-2 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-400 border border-amber-100 dark:border-amber-900/50 hover:bg-amber-100 dark:hover:bg-amber-900/50 transition-all active:scale-95 shadow-sm"
+            >
+              <FileText className="w-4 h-4" />
+              <span className="text-xs font-bold uppercase tracking-wider hidden lg:inline">{t.resources}</span>
+            </button>
+
             <button
               onClick={() => setShowAIOverview(true)}
-              className="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/50 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition-all active:scale-95"
+              className="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/50 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition-all active:scale-95 shadow-sm"
             >
               <Sparkles className="w-4 h-4" />
-              <span className="text-xs font-bold uppercase tracking-wider hidden sm:inline">Overview</span>
+              <span className="text-xs font-bold uppercase tracking-wider hidden sm:inline">{t.overview}</span>
             </button>
             <button
               onClick={toggleDarkMode}
@@ -201,7 +239,7 @@ export default function App() {
           {/* Sidebar: Categories */}
           <div className="lg:col-span-3 space-y-6">
             <section id="categories-section">
-              <h2 className="text-sm font-bold uppercase tracking-widest text-zinc-600 dark:text-zinc-500 mb-4 px-2">Master Categories</h2>
+              <h2 className="text-sm font-bold uppercase tracking-widest text-zinc-600 dark:text-zinc-500 mb-4 px-2">{t.masterCategories}</h2>
               <div className="space-y-1">
                 {DATA.map((cat, index) => (
                   <button
@@ -236,17 +274,17 @@ export default function App() {
             <section className="hidden lg:block">
               <div className="bg-gradient-to-br from-zinc-100 to-white dark:from-zinc-900 dark:to-zinc-950 p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
                 <h3 className="font-bold text-zinc-400 text-xs mb-3 flex items-center gap-2">
-                  <Filter className="w-3 h-3" /> QUICK INFO
+                  <Filter className="w-3 h-3" /> {t.quickInfo}
                 </h3>
                 <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                  Total available works in the full interim list: <strong className="text-emerald-800">318</strong>.
+                  {t.totalWorks}: <strong className="text-emerald-800">318</strong>.
                 </p>
                 <div className="mt-4 pt-4 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between text-xs font-medium text-zinc-500">
-                  <span>Categories</span>
+                  <span>{t.masterCategories}</span>
                   <span className="text-zinc-900 dark:text-zinc-100">4</span>
                 </div>
                 <div className="mt-2 flex items-center justify-between text-xs font-medium text-zinc-500">
-                  <span>Sub-categories</span>
+                  <span>{t.subCategories}</span>
                   <span className="text-zinc-900 dark:text-zinc-100">29</span>
                 </div>
               </div>
@@ -258,8 +296,8 @@ export default function App() {
             {/* Sub Category Selection (Horizontal Scroll or Flex Wrap) */}
             <section id="sub-categories">
               <div className="flex items-baseline justify-between mb-4 px-1">
-                <h2 className="text-sm font-bold uppercase tracking-widest text-zinc-600 dark:text-zinc-500">Sub Categories</h2>
-                <span className="text-[10px] font-mono text-zinc-400 font-bold">{selectedCategory?.subCategories.length} Items</span>
+                <h2 className="text-sm font-bold uppercase tracking-widest text-zinc-600 dark:text-zinc-500">{t.subCategories}</h2>
+                <span className="text-[10px] font-mono text-zinc-400 font-bold">{selectedCategory?.subCategories.length} {t.items}</span>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
                 {selectedCategory?.subCategories.map((sub) => (
@@ -300,7 +338,7 @@ export default function App() {
                   <input
                     type="text"
                     id="works-search"
-                    placeholder={isGlobalSearch ? "Search across all 318 works..." : `Search in ${selectedSubCategory?.name.substring(0, 20)}...`}
+                    placeholder={isGlobalSearch ? t.searchPlaceholderGlobal : `${t.searchPlaceholderLocal} ${selectedSubCategory?.name.substring(0, 20)}...`}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="w-full pl-11 pr-10 py-3 bg-white dark:bg-zinc-800 rounded-2xl border border-zinc-200 dark:border-zinc-700 outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500/50 text-sm transition-all shadow-sm text-zinc-900 dark:text-zinc-100 font-medium placeholder:text-zinc-500/70"
@@ -324,7 +362,7 @@ export default function App() {
                         : 'text-zinc-500 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-300'
                     }`}
                   >
-                    Local
+                    {t.searchLocal}
                   </button>
                   <button
                     onClick={() => setIsGlobalSearch(true)}
@@ -334,7 +372,7 @@ export default function App() {
                         : 'text-zinc-500 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-300'
                     }`}
                   >
-                    Global
+                    {t.searchGlobal}
                   </button>
                 </div>
               </div>
@@ -343,7 +381,7 @@ export default function App() {
                 <div className="px-4 pb-3 flex items-center gap-2">
                   <div className="h-px flex-grow bg-zinc-200 dark:bg-zinc-800" />
                   <span className="text-[10px] font-black uppercase tracking-widest text-emerald-700 dark:text-emerald-500 bg-emerald-50 dark:bg-emerald-950/30 px-3 py-1 rounded-full border border-emerald-100 dark:border-emerald-900/40 shadow-sm">
-                    Work under sub Category- {getSubCategoryLabel()}
+                    {t.workUnderSub} {getSubCategoryLabel()}
                   </span>
                   <div className="h-px flex-grow bg-zinc-200 dark:bg-zinc-800" />
                 </div>
@@ -492,13 +530,13 @@ export default function App() {
                 </div>
                 <div className="text-left">
                   <p className="text-[10px] text-zinc-600 dark:text-zinc-300 font-black uppercase tracking-widest leading-normal">
-                    Designed & Developed by Fakhar Uddin Chowdhury
+                    {t.designedBy} {t.engineerName}
                   </p>
                   <p className="text-[9px] text-zinc-500 dark:text-zinc-400 font-bold italic mb-1">
-                    Junior Engineer, Juria Dev Block, Nagaon, Assam
+                    {t.engineerTitle}
                   </p>
                   <p className="text-[10px] text-zinc-400 dark:text-zinc-500 font-bold uppercase tracking-wider">
-                    at Vision Prototype for public awareness
+                    {t.atVisionProto}
                   </p>
                 </div>
               </div>
@@ -506,7 +544,7 @@ export default function App() {
                 onClick={() => setShowTerms(true)}
                 className="text-[10px] text-zinc-500 hover:text-emerald-600 transition-colors font-bold uppercase tracking-[0.2em] cursor-pointer"
               >
-                Terms of Use
+                {t.termsOfUse}
               </button>
             </div>
           </div>
@@ -532,17 +570,17 @@ export default function App() {
               className="fixed right-0 top-0 h-full w-full max-w-lg bg-white dark:bg-zinc-950 z-[101] shadow-2xl overflow-y-auto"
             >
               <div className="p-6">
-                <div className="flex items-center justify-between mb-8">
-                  <div className="bg-emerald-100 dark:bg-emerald-900/30 px-3 py-1 rounded-full flex items-center gap-2">
-                    <span className="text-[10px] font-black text-emerald-800 dark:text-emerald-400">WORK ID #{activeWorkDetail.id}</span>
-                  </div>
-                  <button 
-                    onClick={() => setActiveWorkDetail(null)}
-                    className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-full transition-colors"
-                  >
-                    <X className="w-5 h-5 text-zinc-500" />
-                  </button>
-                </div>
+                  <div className="flex items-center justify-between mb-8">
+                   <div className="bg-emerald-100 dark:bg-emerald-900/30 px-3 py-1 rounded-full flex items-center gap-2">
+                     <span className="text-[10px] font-black text-emerald-800 dark:text-emerald-400">{t.workId}{activeWorkDetail.id}</span>
+                   </div>
+                   <button 
+                     onClick={() => setActiveWorkDetail(null)}
+                     className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-full transition-colors"
+                   >
+                     <X className="w-5 h-5 text-zinc-500" />
+                   </button>
+                 </div>
 
                 <div className="space-y-6">
                   <div>
@@ -564,21 +602,21 @@ export default function App() {
                   </div>
 
                   <div className="pt-6 border-t border-zinc-100 dark:border-zinc-900">
-                    <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-4">Hierarchical Location</h3>
+                    <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-4">{t.hierarchicalLocation}</h3>
                     <div className="space-y-4">
                       <div className="bg-zinc-50 dark:bg-zinc-900/50 p-4 rounded-2xl border border-zinc-100 dark:border-zinc-800">
-                        <p className="text-[10px] font-bold text-zinc-400 uppercase mb-1">Master Category</p>
+                        <p className="text-[10px] font-bold text-zinc-400 uppercase mb-1">{t.masterCategories}</p>
                         <p className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">{activeWorkDetail.catName}</p>
                       </div>
                       <div className="bg-zinc-50 dark:bg-zinc-900/50 p-4 rounded-2xl border border-zinc-100 dark:border-zinc-800">
-                        <p className="text-[10px] font-bold text-zinc-400 uppercase mb-1">Sub Category</p>
+                        <p className="text-[10px] font-bold text-zinc-400 uppercase mb-1">{t.subCategories}</p>
                         <p className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 leading-relaxed">{activeWorkDetail.subName}</p>
                       </div>
                     </div>
                   </div>
 
                   <div className="pt-6 border-t border-zinc-100 dark:border-zinc-900">
-                    <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-4">Implementation Guidelines</h3>
+                    <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-4">{t.implementationGuidelines}</h3>
                     <div className="space-y-3">
                       {[ 
                         "Technical sanction required from designated authority.",
@@ -595,19 +633,51 @@ export default function App() {
                   </div>
 
                   <div className="pt-6 border-t border-zinc-100 dark:border-zinc-900">
-                    <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-4">Target Audience</h3>
+                    <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-4">{t.targetAudience}</h3>
                     <div className="flex gap-4">
                       <div className="flex-1 p-4 rounded-2xl border border-dashed border-zinc-200 dark:border-zinc-800 text-center">
                         <span className="block text-lg font-bold">
                           {activeWorkDetail.name.toLowerCase().includes('individual') ? "Yes" : "No"}
                         </span>
-                        <span className="text-[10px] font-bold text-zinc-400 uppercase">Individual</span>
+                        <span className="text-[10px] font-bold text-zinc-400 uppercase">{t.individual}</span>
                       </div>
                       <div className="flex-1 p-4 rounded-2xl border border-dashed border-zinc-200 dark:border-zinc-800 text-center">
                         <span className="block text-lg font-bold">
                           {activeWorkDetail.name.toLowerCase().includes('community') ? "Yes" : "No"}
                         </span>
-                        <span className="text-[10px] font-bold text-zinc-400 uppercase">Community</span>
+                        <span className="text-[10px] font-bold text-zinc-400 uppercase">{t.community}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pt-6 border-t border-zinc-100 dark:border-zinc-900 space-y-6">
+                    <div>
+                      <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-4">{t.downloadEstimate}</h3>
+                      <button className="w-full flex items-center justify-between p-4 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/50 rounded-2xl group hover:bg-emerald-500 transition-all">
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 bg-emerald-100 dark:bg-emerald-900/50 rounded-xl text-emerald-600 group-hover:bg-white group-hover:text-emerald-600 transition-colors">
+                            <Download className="w-4 h-4" />
+                          </div>
+                          <div className="text-left">
+                            <p className="text-sm font-bold text-emerald-900 dark:text-emerald-400 group-hover:text-white">Model_Estimate_{activeWorkDetail.id}.pdf</p>
+                            <p className="text-[10px] font-medium text-emerald-600 dark:text-emerald-500 group-hover:text-emerald-100 uppercase tracking-wider">Standard PDF • 2.4 MB</p>
+                          </div>
+                        </div>
+                        <ChevronRight className="w-4 h-4 text-emerald-300 group-hover:text-white" />
+                      </button>
+                    </div>
+
+                    <div>
+                      <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-4">{t.uploadEstimate}</h3>
+                      <div className="relative group/upload">
+                        <input type="file" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
+                        <div className="p-8 border-2 border-dashed border-zinc-200 dark:border-zinc-800 rounded-2xl bg-zinc-50 dark:bg-zinc-900/30 flex flex-col items-center justify-center text-center group-hover/upload:border-emerald-500/50 group-hover/upload:bg-emerald-50/10 transition-all">
+                          <div className="p-3 bg-white dark:bg-zinc-800 rounded-2xl shadow-sm border border-zinc-100 dark:border-zinc-800 mb-4 group-hover/upload:scale-110 transition-transform">
+                            <Upload className="w-6 h-6 text-emerald-500" />
+                          </div>
+                          <p className="text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-1">{t.uploadEstimate}</p>
+                          <p className="text-[10px] font-medium text-zinc-400 dark:text-zinc-500 max-w-[200px] leading-relaxed italic">{t.dropZoneText}</p>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -618,7 +688,7 @@ export default function App() {
                     onClick={() => setActiveWorkDetail(null)}
                     className="w-full py-4 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-2xl font-bold text-sm shadow-xl shadow-zinc-500/10 active:scale-[0.98] transition-all"
                   >
-                    Close Details
+                    {t.close}
                   </button>
                 </div>
               </div>
@@ -737,6 +807,173 @@ export default function App() {
                   className="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl font-bold shadow-lg shadow-emerald-600/20 transition-all active:scale-[0.98]"
                 >
                   Got it, thank you
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+      {/* Resource Center Modal */}
+      <AnimatePresence>
+        {showResources && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowResources(false)}
+              className="fixed inset-0 bg-black/60 backdrop-blur-md z-[120]"
+            />
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 20 }}
+              className="fixed inset-4 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-full md:max-w-3xl max-h-[90vh] bg-white dark:bg-zinc-950 z-[121] shadow-2xl rounded-[2.5rem] overflow-hidden flex flex-col border border-zinc-200 dark:border-zinc-800"
+            >
+              {/* Header */}
+              <div className="p-8 border-b border-zinc-100 dark:border-zinc-900 flex items-center justify-between bg-zinc-50/50 dark:bg-zinc-900/20">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-amber-100 dark:bg-amber-900/50 rounded-2xl text-amber-600 dark:text-amber-400 shadow-sm">
+                    <FileText className="w-8 h-8" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-black text-zinc-900 dark:text-zinc-100 tracking-tight">{t.resourceCenter}</h2>
+                    <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-[0.2em]">{t.officialDocuments}</p>
+                  </div>
+                </div>
+                <button 
+                  onClick={() => setShowResources(false)}
+                  className="p-3 hover:bg-zinc-200 dark:hover:bg-zinc-800 rounded-full transition-colors group"
+                >
+                  <X className="w-6 h-6 text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-zinc-100" />
+                </button>
+              </div>
+
+              {/* Content */}
+              <div className="p-8 overflow-y-auto custom-scrollbar flex-grow">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Category 1: G RAM G Bill */}
+                  <div className="space-y-4">
+                    <h3 className="text-[10px] font-black uppercase tracking-widest text-zinc-400 flex items-center gap-2">
+                       <BookOpen className="w-3 h-3" /> {t.actDocument}
+                    </h3>
+                    <div className="space-y-3">
+                      <a 
+                        href="https://prsindia.org/files/bills_acts/bills_parliament/2025/Viksit_Bharat%E2%80%93Guarantee_for_Rozgar_and_Ajeevika_Mission_(Gramin)_VB%E2%80%93G_RAM_G_Bill,2025.pdf"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block p-5 bg-gradient-to-br from-emerald-600 to-teal-700 rounded-3xl text-white shadow-xl shadow-emerald-500/20 group cursor-pointer active:scale-[0.98] transition-all"
+                      >
+                        <p className="text-lg font-bold leading-tight mb-1">VB-G RAM G Bill, 2025</p>
+                        <p className="text-[10px] font-medium text-emerald-100/80 mb-4 uppercase tracking-wider italic">Full Draft Bill • PRS India Document</p>
+                        <div className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest bg-white/20 group-hover:bg-white/30 px-4 py-2 rounded-xl transition-colors">
+                          <Download className="w-4 h-4" /> {t.download}
+                        </div>
+                      </a>
+
+                      <a 
+                        href="https://nrega.nic.in/netnrega/WriteReadData/Circulars/Master_Circular_2024.pdf" 
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block p-4 border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 rounded-2xl group hover:border-emerald-500/30 transition-all cursor-pointer shadow-sm"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl text-emerald-600">
+                              <FileText className="w-4 h-4" />
+                            </div>
+                            <div>
+                              <p className="text-xs font-bold text-zinc-800 dark:text-zinc-200 group-hover:text-emerald-600 transition-colors">Interim Permissible Works Order</p>
+                              <p className="text-[9px] font-medium text-zinc-400 uppercase tracking-tighter italic">Ministry Notification • NREGA Portal • 2025</p>
+                            </div>
+                          </div>
+                          <Download className="w-4 h-4 text-zinc-300 group-hover:text-emerald-500 transition-colors" />
+                        </div>
+                      </a>
+
+                      <a 
+                        href="https://static.pib.gov.in/WriteReadData/specificdocs/documents/2025/dec/doc20251222741501.pdf"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block p-4 border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 rounded-2xl group hover:border-emerald-500/30 transition-all cursor-pointer shadow-sm"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl text-emerald-600">
+                              <FileText className="w-4 h-4" />
+                            </div>
+                            <div>
+                              <p className="text-xs font-bold text-zinc-800 dark:text-zinc-200 group-hover:text-emerald-600 transition-colors">Official PIB Document (Dec 2025)</p>
+                              <p className="text-[9px] font-medium text-zinc-400 uppercase tracking-tighter italic">Ministry of Information & Broadcasting</p>
+                            </div>
+                          </div>
+                          <Download className="w-4 h-4 text-zinc-300 group-hover:text-emerald-500 transition-colors" />
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Category 2: Government Orders */}
+                  <div className="space-y-4">
+                    <h3 className="text-[10px] font-black uppercase tracking-widest text-zinc-400 flex items-center gap-2">
+                       <FileText className="w-3 h-3" /> {t.governmentOrders}
+                    </h3>
+                    <div className="space-y-3">
+                      {[ 
+                        { name: "MSR-2025-01: Wage Rate Revision", date: "Jan 12, 2025" },
+                        { name: "DRD-2025-44: Asset Geo-mapping", date: "Mar 05, 2025" },
+                        { name: "SEC-2025-09: Interim Work List", date: "Apr 20, 2025" }
+                      ].map((go, i) => (
+                        <div key={i} className="p-4 bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-2xl flex items-center justify-between group hover:border-amber-500/30 transition-all cursor-pointer">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-amber-50 dark:bg-amber-900/30 rounded-lg text-amber-600">
+                              <ExternalLink className="w-3 h-3" />
+                            </div>
+                            <div>
+                              <p className="text-xs font-bold text-zinc-800 dark:text-zinc-200 group-hover:text-amber-700 transition-colors">{go.name}</p>
+                              <p className="text-[9px] font-medium text-zinc-400 uppercase tracking-tighter">{go.date}</p>
+                            </div>
+                          </div>
+                          <Download className="w-4 h-4 text-zinc-300 group-hover:text-amber-500 transition-colors" />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Category 3: Circulars */}
+                  <div className="md:col-span-2 space-y-4">
+                    <h3 className="text-[10px] font-black uppercase tracking-widest text-zinc-400 flex items-center gap-2">
+                       <CloudLightning className="w-3 h-3" /> {t.circulars}
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {[ 
+                        "Guidelines on SHG Livelihood Sheds",
+                        "Rainwater Harvesting Technical Specs",
+                        "Climate Resilient Road Standards"
+                      ].map((circular, i) => (
+                        <div key={i} className="p-4 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl flex flex-col justify-between hover:shadow-lg transition-all group cursor-pointer">
+                          <p className="text-xs font-bold text-zinc-700 dark:text-zinc-300 mb-4 leading-relaxed group-hover:text-emerald-600">{circular}</p>
+                          <div className="flex items-center justify-between pt-3 border-t border-zinc-100 dark:border-zinc-800">
+                            <span className="text-[9px] font-bold text-zinc-400 uppercase">May 2026</span>
+                            <Download className="w-3 h-3 text-zinc-400 group-hover:text-emerald-500" />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Footer */}
+              <div className="p-8 bg-zinc-50 dark:bg-zinc-900/50 border-t border-zinc-100 dark:border-zinc-900 text-center">
+                <p className="text-xs text-zinc-500 font-medium mb-6 italic max-w-lg mx-auto">
+                  All documents provided above are for public awareness. Please consult the official Ministry of Rural Development portal for certified copies.
+                </p>
+                <button 
+                  onClick={() => setShowResources(false)}
+                  className="px-8 py-3 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-2xl font-bold text-xs uppercase tracking-[0.2em] shadow-xl shadow-zinc-500/10 active:scale-[0.98] transition-all"
+                >
+                  {t.close}
                 </button>
               </div>
             </motion.div>
