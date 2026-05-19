@@ -35,6 +35,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { DATA, MasterCategory, SubCategory, Work } from "./data";
 import { translations, Language } from "./translations";
 import { FAQ_DATA } from "./faqData";
+import { incrementVisitorCount } from "./lib/firebase";
 import bannerImg from "./assets/images/vb_gram_g_banner_1779003862167.png";
 import logoImg from "./assets/images/vision_prototype_logo_1779004228627.png";
 
@@ -58,6 +59,18 @@ export default function App() {
   const [showLangMenu, setShowLangMenu] = useState(false);
   const [uploadStatus, setUploadStatus] = useState<'idle' | 'uploading' | 'success'>('idle');
   const [lang, setLang] = useState<Language>('en');
+  const [visitorCount, setVisitorCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    // Increment and fetch real visitor count from Firestore
+    const updateCounter = async () => {
+      const count = await incrementVisitorCount();
+      if (count > 0) {
+        setVisitorCount(count);
+      }
+    };
+    updateCounter();
+  }, []);
 
   const [feedbackStatus, setFeedbackStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
   const [feedbackName, setFeedbackName] = useState("");
@@ -287,6 +300,26 @@ export default function App() {
       </nav>
 
       <main className="max-w-7xl mx-auto px-4 py-8">
+        {/* Visitor Counter */}
+        <AnimatePresence>
+          {visitorCount !== null && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-4 flex justify-center sm:justify-end"
+            >
+              <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm group hover:border-emerald-500/30 transition-all">
+                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] text-zinc-400 dark:text-zinc-500">{t.visitorCounter}</span>
+                <div className="h-3 w-[1px] bg-zinc-200 dark:bg-zinc-800 mx-1" />
+                <span className="text-xs font-black text-zinc-900 dark:text-zinc-100 font-mono tabular-nums tracking-tighter">
+                  {visitorCount.toLocaleString()}
+                </span>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Banner Section */}
         <motion.div 
           initial={{ opacity: 0, y: -20 }}

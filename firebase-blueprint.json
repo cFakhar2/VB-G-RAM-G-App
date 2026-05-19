@@ -1,0 +1,22 @@
+{
+  "entities": {
+    "Counter": {
+      "title": "Counter",
+      "description": "Global statistics counter",
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "number",
+          "description": "Total count value"
+        }
+      },
+      "required": ["count"]
+    }
+  },
+  "firestore": {
+    "/stats/{statId}": {
+      "schema": "Counter",
+      "description": "Collection for global stats like visitor counts"
+    }
+  }
+}

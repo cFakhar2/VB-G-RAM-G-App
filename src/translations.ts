@@ -50,6 +50,7 @@ export const translations = {
     feedbackLabelMessage: "Your Message",
     feedbackSubmit: "Submit Feedback",
     feedbackSuccess: "Feedback sent successfully!",
+    visitorCounter: "Total Visits",
     pibDate: "Posted On: 11 MAY 2026 12:19PM by PIB Delhi"
   },
   as: {
@@ -100,6 +101,7 @@ export const translations = {
     feedbackLabelMessage: "আপোনাৰ মতামত",
     feedbackSubmit: "মতামত জমা কৰক",
     feedbackSuccess: "মতামত সফলতাৰে প্ৰেৰণ কৰা হৈছে!",
+    visitorCounter: "মুঠ দৰ্শনাৰ্থী",
     pibDate: "১১ মে’, ২০২৬ তাৰিখে পিআইবি দিল্লীৰ দ্বাৰা প্ৰকাশিত"
   },
   hi: {
@@ -150,6 +152,7 @@ export const translations = {
     feedbackLabelMessage: "आपकी प्रतिक्रिया",
     feedbackSubmit: "प्रतिक्रिया भेजें",
     feedbackSuccess: "प्रतिक्रिया सफलतापूर्वक भेज दी गई है!",
+    visitorCounter: "कुल विज़िटर",
     pibDate: "11 मई 2026 को पीआईबी दिल्ली द्वारा पोस्ट किया गया"
   }
 };
