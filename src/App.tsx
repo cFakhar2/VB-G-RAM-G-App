@@ -634,13 +634,18 @@ export default function App() {
           <div className="mt-12 pt-8 border-t border-zinc-100 dark:border-zinc-900">
             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
               <div className="flex items-center gap-4">
-                <div className="h-12 w-auto overflow-hidden rounded-lg brightness-110 contrast-125">
+                <a 
+                  href="https://www.facebook.com/visionprototype" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="h-12 w-auto overflow-hidden rounded-lg brightness-110 contrast-125 transition-transform hover:scale-105 active:scale-95"
+                >
                   <img 
                     src={logoImg} 
                     alt="Vision Prototype Logo" 
                     className="h-full w-auto object-contain" 
                   />
-                </div>
+                </a>
                 <div className="text-left">
                   <p className="text-[10px] text-zinc-600 dark:text-zinc-300 font-black uppercase tracking-widest leading-normal">
                     {t.designedBy} {t.engineerName}
@@ -648,9 +653,14 @@ export default function App() {
                   <p className="text-[9px] text-zinc-500 dark:text-zinc-400 font-bold italic mb-1">
                     {t.engineerTitle}
                   </p>
-                  <p className="text-[10px] text-zinc-400 dark:text-zinc-500 font-bold uppercase tracking-wider">
+                  <a 
+                    href="https://www.facebook.com/visionprototype" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-[10px] text-zinc-400 dark:text-zinc-500 font-bold uppercase tracking-wider hover:text-emerald-500 transition-colors"
+                  >
                     {t.atVisionProto}
-                  </p>
+                  </a>
                 </div>
               </div>
               <div className="flex items-center gap-6">
